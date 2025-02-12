@@ -8,8 +8,6 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import com.prod2025.nevrozqIndividual.R
 
 @Composable
 private fun Color.animate(animationSpec: AnimationSpec<Color>): Color {

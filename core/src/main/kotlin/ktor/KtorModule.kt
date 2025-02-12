@@ -1,43 +1,57 @@
 package ktor
 
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.android.Android
-import io.ktor.client.plugins.DefaultRequest
-import io.ktor.client.plugins.HttpTimeout
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logger
-import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.plugins.logging.SIMPLE
 import io.ktor.client.request.header
-import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.json.Json
+import io.ktor.http.URLProtocol
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
+data object HttpConstants {
+    data object News {
+        const val CLIENT_NAME = "HttpClientNews"
+    }
+
+    data object Stock {
+        const val CLIENT_NAME = "HttpClientStock"
+        const val HOST = "finnhub.io/api/v1"
+        const val TOKEN_HEADER = "X-Finnhub-Token"
+        const val TOKEN = "cum9nq9r01qsaphv45rgcum9nq9r01qsaphv45s0"
+    }
+
+    data object Exchange {
+        const val CLIENT_NAME = "HttpClientExchange"
+        const val HOST = "v6.exchangerate-api.com/v6"
+        const val TOKEN = "bf0ad224573b24404c2e70a4"
+    }
+}
+
+
 internal val ktorModule = module {
-    single<HttpClient> {
-        HttpClient(Android) {
-            install(Logging) {
-                logger = Logger.SIMPLE
-                level = LogLevel.ALL
+    with(HttpConstants.Exchange) {
+        single<HttpClient>(named(CLIENT_NAME)) {
+            HttpClientFactory().createFactory {
+                url {
+                    host = "$HOST/$TOKEN/latest"
+                }
             }
-            install(DefaultRequest)
-            install(ContentNegotiation) {
-                json(Json {
-                    isLenient = true
-                    ignoreUnknownKeys = true
-                    prettyPrint = true
-                })
-            }
+        }
+    }
 
-            install(HttpTimeout) {
-                connectTimeoutMillis = 15000
-                requestTimeoutMillis = 30000
-            }
+    with(HttpConstants.News) {
+        single<HttpClient>(named(CLIENT_NAME)) {
+            HttpClientFactory().createFactory {
 
-            defaultRequest {
-                header("Content-Type", "application/json; charset=UTF-8")
+            }
+        }
+    }
+
+    with(HttpConstants.Stock) {
+        single<HttpClient>(named(CLIENT_NAME)) {
+            HttpClientFactory().createFactory {
+                header(TOKEN_HEADER, TOKEN)
+                url {
+                    host = HOST
+                }
             }
         }
     }

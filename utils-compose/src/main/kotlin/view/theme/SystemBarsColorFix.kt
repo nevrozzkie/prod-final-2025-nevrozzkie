@@ -10,11 +10,9 @@ import view.ViewManager
 @Composable
 fun SystemBarsColorFix(viewManager: ViewManager) {
     val systemUiController = rememberSystemUiController()
-    if(!isSystemInDarkTheme()) {
-        systemUiController.setSystemBarsColor(
-            color = Color.Transparent,
-            darkIcons = viewManager.tint.value != ThemeTint.Dark,
-            isNavigationBarContrastEnforced = false
-        )
-    }
+    systemUiController.setSystemBarsColor(
+        color = Color.Transparent,
+        darkIcons = viewManager.tint.value != ThemeTint.Dark,
+        isNavigationBarContrastEnforced = false
+    )
 }

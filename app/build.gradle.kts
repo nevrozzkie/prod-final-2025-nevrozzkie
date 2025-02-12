@@ -3,6 +3,7 @@ plugins {
     id(libs.plugins.android.application.get().pluginId)
     id(libs.plugins.kotlin.android.get().pluginId)
     id(libs.plugins.kotlin.compose.get().pluginId)
+    id(libs.plugins.serialization.get().pluginId)
 }
 
 android {
@@ -41,13 +42,10 @@ android {
 }
 
 dependencies {
+    implementation(project(":features:feed:data"))
 
-
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.android)
-    implementation(libs.ktor.client.json)
-    implementation(libs.ktor.client.negotiation)
-    implementation(libs.ktor.client.logging)
+    implementation(libs.decompose.core)
+    implementation(libs.decompose.compose)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -61,15 +59,4 @@ dependencies {
 
     implementation(project(":core"))
     implementation(project(":utils-compose"))
-//    implementation(libs.androidx)
-//    implementation(libs.androidx.ui.graphics)
-//    implementation(libs.androidx.ui.tooling.preview)
-//    implementation(libs.androidx.material3)
-//    testImplementation(libs.junit)
-//    androidTestImplementation(libs.androidx.junit)
-//    androidTestImplementation(libs.androidx.espresso.core)
-//    androidTestImplementation(platform(libs.androidx.compose.bom))
-//    androidTestImplementation(libs.androidx.ui.test.junit4)
-//    debugImplementation(libs.androidx.ui.tooling)
-//    debugImplementation(libs.androidx.ui.test.manifest)
 }

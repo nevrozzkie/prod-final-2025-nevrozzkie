@@ -1,15 +1,14 @@
 import org.gradle.accessors.dm.LibrariesForLibs
-
+import org.gradle.kotlin.dsl.kotlin
 
 val libs = the<LibrariesForLibs>()
 plugins {
     id("zero-setup")
+    kotlin("plugin.serialization")
 }
 
 kotlin {
     dependencies {
-        // An error in the editor, although the dependencies are correctly resolved.
-        api(libs.koin.android)
+        implementation(libs.kotlinx.serialization.json)
     }
 }
-

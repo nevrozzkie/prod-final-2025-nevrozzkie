@@ -1,10 +1,9 @@
-import gradle.kotlin.dsl.accessors._f3d8dfb2ebdc3aa38b41aea8a107da75.implementation
 import org.gradle.accessors.dm.LibrariesForLibs
 
 val libs = the<LibrariesForLibs>()
 plugins {
     id("zero-setup")
-    id("org.jetbrains.kotlin.plugin.compose")
+    kotlin("plugin.compose")
 }
 
 kotlin {
@@ -16,6 +15,7 @@ kotlin {
         implementation(libs.androidx.compose.material3)
         implementation(libs.androidx.compose.icons)
         implementation(libs.androidx.compose.ui.tooling)
+        implementation(libs.decompose.compose)
     }
 }
 

@@ -4,12 +4,12 @@ import org.gradle.accessors.dm.LibrariesForLibs
 
 val libs = the<LibrariesForLibs>()
 plugins {
-    id("org.jetbrains.kotlin.android")
+    kotlin("android")
     id("com.android.library")
 }
 
 android {
-    namespace = "com.prod2025.nevrozqIndividual"
+    namespace = "com.prodfinal2025.nevrozq"
     compileSdk = 35
     defaultConfig {
         minSdk = 26

@@ -1,10 +1,10 @@
 plugins {
-    id("logic-setup")
-//    id(libs.plugins.serialization.get().pluginId)
+    id("zero-setup")
 }
 
 kotlin {
     dependencies {
+        api(libs.koin.android)
         implementation(libs.ktor.client.core)
         implementation(libs.ktor.client.android)
         implementation(libs.ktor.client.json)

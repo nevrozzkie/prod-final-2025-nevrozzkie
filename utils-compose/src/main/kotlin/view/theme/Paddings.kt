@@ -4,4 +4,6 @@ import androidx.compose.ui.unit.dp
 
 data object Paddings {
     val hMainContainer = 15.dp
+    val hTopBar = 20.dp
+    val medium = 13.dp
 }

@@ -1,39 +1,42 @@
 package com.prodfinal2025.nevrozq.navigation
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.backhandler.BackHandlerOwner
+import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.prodfinal2025.nevrozq.navigation.RootComponent.Child
-import com.prodfinal2025.nevrozq.navigation.RootComponent.Child.FeedChild
+import com.prodfinal2025.nevrozq.navigation.RootComponent.Child.MainChild
 import com.prodfinal2025.nevrozq.navigation.RootComponent.Config
+import main.MainComponent
 
 class RootComponentImpl(
-    componentContext: ComponentContext
+    componentContext: ComponentContext,
+    private val storeFactory: StoreFactory
 ) : RootComponent, ComponentContext by componentContext {
     private val nav = StackNavigation<Config>()
 
     private val _stack = childStack(
         source = nav,
         serializer = Config.serializer(),
-        initialConfiguration = Config.Feed,
+        initialConfiguration = Config.Main,
         childFactory = ::child,
     )
 
     override val stack = _stack
 
-    private fun child(config: Config, componentContext: ComponentContext): Child =
+    private fun child(config: Config, childContext: ComponentContext): Child =
         when (config) {
-            Config.Feed -> FeedChild
+            Config.Main -> MainChild(
+                MainComponent(
+                    childContext,
+                    storeFactory = storeFactory
+                )
+            )
         }
 
 
     override fun onBackClicked() {
         nav.pop()
     }
-
-
 }

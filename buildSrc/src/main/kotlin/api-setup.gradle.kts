@@ -7,8 +7,7 @@ plugins {
     kotlin("plugin.serialization")
 }
 
-kotlin {
-    dependencies {
-        implementation(libs.kotlinx.serialization.json)
-    }
+
+dependencies {
+    implementation(libs.kotlinx.serialization.json)
 }

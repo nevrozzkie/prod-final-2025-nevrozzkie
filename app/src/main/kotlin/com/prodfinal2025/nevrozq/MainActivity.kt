@@ -6,19 +6,24 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.defaultComponentContext
+import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.prodfinal2025.nevrozq.navigation.RootComponentImpl
 import com.prodfinal2025.nevrozq.navigation.RootContent
 import coreModule
-import feedModule
+import mainModule
 import koin.Inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -36,7 +41,7 @@ class MainActivity : ComponentActivity() {
             androidContext(this@MainActivity)
             modules(
                 coreModule,
-                feedModule
+                mainModule
             )
         }
         enableEdgeToEdge()
@@ -44,7 +49,8 @@ class MainActivity : ComponentActivity() {
         val viewManager = getViewManager("Dark")
 
         val rootComponent = RootComponentImpl(
-            componentContext = defaultComponentContext()
+            componentContext = defaultComponentContext(),
+            storeFactory = DefaultStoreFactory()
         )
 
         setContent {
@@ -52,8 +58,21 @@ class MainActivity : ComponentActivity() {
                 LocalViewManager provides viewManager
             ) {
                 AppTheme {
-                    Surface(color = MaterialTheme.colorScheme.background) {
-                        RootContent(rootComponent)
+                    Box(Modifier.fillMaxSize()) {
+                        Surface(color = MaterialTheme.colorScheme.background) {
+                            RootContent(rootComponent)
+                        }
+
+                        Button(
+                            modifier = Modifier.align(Alignment.BottomEnd).safeContentPadding(),
+                            onClick = {
+                                viewManager.tint.value =
+                                    if (viewManager.isDark.value)  ThemeTint.Light
+                                    else ThemeTint.Dark
+                            }
+                        ) {
+                            Text("Change Theme")
+                        }
                     }
                 }
             }

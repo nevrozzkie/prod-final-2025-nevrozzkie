@@ -5,13 +5,14 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import kotlinx.coroutines.flow.Flow
 
-interface DefaultMVIComponent<I : Any, S : Any, L : Any> {
-    val store: Store<I, S, L>
-    val model: Value<S>
+
+interface DefaultMVIComponent<Intent : Any, State : Any, Label : Any> {
+    val store: Store<Intent, State, Label>
+    val model: Value<State>
         get() = store.asValue()
-    val labels: Flow<L>
+    val labels: Flow<Label>
         get() = store.labels
-    fun onEvent(event: I) {
+    fun onEvent(event: Intent) {
         store.accept(event)
     }
 }

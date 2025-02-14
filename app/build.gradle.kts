@@ -1,4 +1,3 @@
-
 plugins {
     id(libs.plugins.android.application.get().pluginId)
     id(libs.plugins.kotlin.android.get().pluginId)
@@ -42,10 +41,13 @@ android {
 }
 
 dependencies {
-    implementation(project(":features:feed:data"))
+    implementation(project(":features:main:compose"))
+    implementation(project(":features:main:data"))
 
-    implementation(libs.decompose.core)
     implementation(libs.decompose.compose)
+
+    implementation(libs.mvikotlin.core)
+    implementation(libs.mvikotlin.main)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

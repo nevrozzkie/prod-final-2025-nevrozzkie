@@ -1,5 +1,6 @@
 package com.prodfinal2025.nevrozq.navigation
 
+import MainScreen
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
@@ -32,7 +33,11 @@ fun RootContent(
                 onBack = component::onBackClicked
             )
         ) {
-
+            when (val child = it.instance) {
+                is RootComponent.Child.MainChild -> MainScreen(
+                    child.component
+                )
+            }
         }
     }
 }

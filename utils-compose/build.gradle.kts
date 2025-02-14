@@ -1,12 +1,15 @@
 plugins {
-    id("compose-setup")
+    id("compose-common-setup")
 }
 
-kotlin {
-    dependencies {
-        api(project(":utils"))
 
-        implementation(libs.androidx.accompanist.systemuicontroller)
-    }
+
+dependencies {
+
+
+    api(project(":utils"))
+
+    implementation(libs.androidx.accompanist.systemuicontroller)
 }
+
 

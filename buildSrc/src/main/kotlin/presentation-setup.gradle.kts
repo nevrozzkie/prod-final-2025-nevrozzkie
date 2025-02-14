@@ -7,14 +7,13 @@ plugins {
     id("zero-setup")
 }
 
-kotlin {
-    dependencies {
-        implementation(project(":core"))
-        implementation(project(":utils"))
+
+dependencies {
+    implementation(project(":core"))
+    implementation(project(":utils"))
 
 
-        implementation(libs.decompose.core)
-        implementation(libs.mvikotlin.core)
-        implementation(libs.mvikotlin.coroutines)
-    }
+    api(libs.decompose.core)
+    implementation(libs.mvikotlin.core)
+    implementation(libs.mvikotlin.coroutines)
 }

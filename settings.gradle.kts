@@ -16,13 +16,14 @@ dependencyResolutionManagement {
 rootProject.name = "ProdFinal"
 include(":app")
 include(":core")
+
 include(":utils")
 include(":utils-compose")
 
-include(":features:feed:api")
-include(":features:feed:data")
-include(":features:feed:presentation")
-include(":features:feed:compose")
+include(":features:main:api")
+include(":features:main:data")
+include(":features:main:presentation")
+include(":features:main:compose")
 
 //include(":features:search:api")
 //include(":features:search:data")

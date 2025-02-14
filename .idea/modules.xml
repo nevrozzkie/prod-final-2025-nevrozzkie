@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/features/feed/api/ProdFinal.features.feed.api.main.iml" filepath="$PROJECT_DIR$/.idea/modules/features/feed/api/ProdFinal.features.feed.api.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/features/feed/compose/ProdFinal.features.feed.compose.main.iml" filepath="$PROJECT_DIR$/.idea/modules/features/feed/compose/ProdFinal.features.feed.compose.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/features/feed/data/ProdFinal.features.feed.data.main.iml" filepath="$PROJECT_DIR$/.idea/modules/features/feed/data/ProdFinal.features.feed.data.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/features/feed/presentation/ProdFinal.features.feed.presentation.main.iml" filepath="$PROJECT_DIR$/.idea/modules/features/feed/presentation/ProdFinal.features.feed.presentation.main.iml" />
     </modules>

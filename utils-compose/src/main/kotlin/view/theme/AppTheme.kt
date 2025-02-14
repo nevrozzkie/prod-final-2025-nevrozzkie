@@ -4,6 +4,10 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import view.DarkThemeColors
+import view.LightThemeColors
+import view.LocalThemeColors
 import view.LocalViewManager
 import view.ThemeTint
 
@@ -14,15 +18,20 @@ fun AppTheme(isDarkPriority: Boolean = false, content: @Composable () -> Unit) {
     viewManager.isDark.value = isThemeDark(isDarkPriority, viewManager.tint.value)
 
     val colorScheme = if (viewManager.isDark.value)
-        greenDarkColorScheme() else greenLightColorScheme()
+        DarkColorScheme else LightColorScheme
+
+    val themeColors = if (viewManager.isDark.value) DarkThemeColors else LightThemeColors
 
     SystemBarsColorFix(viewManager)
 
-    MaterialTheme(
-        colorScheme = colorScheme.animated(),
-
+    CompositionLocalProvider(
+        LocalThemeColors provides themeColors
     ) {
-        content()
+        MaterialTheme(
+            colorScheme = colorScheme.animated(),
+        ) {
+            content()
+        }
     }
 }
 

@@ -10,11 +10,6 @@ sealed interface NetworkState {
     data object Error : NetworkState
 }
 
-interface NetworkStateOwner {
-    val networkStateManager: NetworkStateManager
-        get() = NetworkStateManager()
-}
-
 class NetworkStateManager {
     private val _model = MutableValue(NetworkModel())
 
@@ -30,6 +25,7 @@ class NetworkStateManager {
 
     fun nStartLoading() {
         _model.value = _model.value.copy(state = NetworkState.Loading)
+        println("STATE: ${networkModel.value}")
     }
 
     fun nError(

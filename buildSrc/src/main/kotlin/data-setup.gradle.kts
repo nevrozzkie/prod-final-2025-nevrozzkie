@@ -6,10 +6,8 @@ plugins {
     id("zero-setup")
 }
 
-kotlin {
-    dependencies {
-//        implementation(libs.kotlinx.coroutines)
-        implementation(libs.ktor.client.core)
-        implementation(project(":core"))
-    }
+
+dependencies {
+    implementation(libs.ktor.client.core)
+    implementation(project(":core"))
 }

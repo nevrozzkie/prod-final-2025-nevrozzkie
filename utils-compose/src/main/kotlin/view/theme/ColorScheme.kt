@@ -5,6 +5,8 @@ import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
@@ -55,72 +57,82 @@ fun ColorScheme.animated(animationSpec: AnimationSpec<Color> = remember { spring
         scrim = this.scrim.animate(animationSpec),
     )
 }
-
-@Composable
-fun greenLightColorScheme():
-        ColorScheme
-        = ColorScheme(
-    primary =                   Colors.greenLightPrimary,
-    onPrimary =                 Colors.greenLightOnPrimary,
-    primaryContainer =          Colors.greenLightPrimaryContainer,
-    onPrimaryContainer =        Colors.greenLightOnPrimaryContainer,
-    inversePrimary =            Colors.greenLightInversePrimary,
-    secondary =                 Colors.greenLightSecondary,
-    onSecondary =               Colors.greenLightOnSecondary,
-    secondaryContainer =        Colors.greenLightSecondaryContainer,
-    onSecondaryContainer =      Colors.greenLightOnSecondaryContainer,
-    tertiary =                  Colors.greenLightTertiary,
-    onTertiary =                Colors.greenLightOnTertiary,
-    tertiaryContainer =         Colors.greenLightTertiaryContainer,
-    onTertiaryContainer =       Colors.greenLightOnTertiaryContainer,
-    background =                Colors.greenLightBackground,
-    onBackground =              Colors.greenLightOnBackground,
-    surface =                   Colors.greenLightSurface,
-    onSurface =                 Colors.greenLightOnSurface,
-    surfaceVariant =            Colors.greenLightSurfaceVariant,
-    onSurfaceVariant =          Colors.greenLightOnSurfaceVariant,
-    surfaceTint =               Colors.greenLightSurfaceTint,
-    inverseSurface =            Colors.greenLightInverseSurface,
-    inverseOnSurface =          Colors.greenLightInverseOnSurface,
-    error =                     Colors.greenLightError,
-    onError =                   Colors.greenLightOnError,
-    errorContainer =            Colors.greenLightErrorContainer,
-    onErrorContainer =          Colors.greenLightOnErrorContainer,
-    outline =                   Colors.greenLightOutline,
-    outlineVariant =            Colors.greenLightOutlineVariant,
-    scrim = Color.Black
+val LightColorScheme = ColorScheme(
+    primary = Color(0xFFFFEB3B), // Yellow 600
+    onPrimary = Color(0xFF212121), // Black
+    primaryContainer = Color(0xFFF9A825), // Yellow 800
+    onPrimaryContainer = Color(0xFFFFFFFF), // White
+    inversePrimary = Color(0xFFFFF176), // Yellow 300
+    secondary = Color(0xFF64B5F6), // Blue 300
+    onSecondary = Color(0xFFFFFFFF), // White
+    secondaryContainer = Color(0xFFBBDEFB), // Blue 100
+    onSecondaryContainer = Color(0xFF212121), // Black
+    tertiary = Color(0xFF81C784), // Green 300
+    onTertiary = Color(0xFFFFFFFF), // White
+    tertiaryContainer = Color(0xFFC8E6C9), // Green 100
+    onTertiaryContainer = Color(0xFF212121), // Black
+    background = Color(0xFFFAFAFA), // Light Gray
+    onBackground = Color(0xFF212121), // Black
+    surface = Color(0xFFFFFFFF), // White
+    onSurface = Color(0xFF212121), // Black
+    surfaceVariant = Color(0xFFEEEEEE), // Light Gray
+    onSurfaceVariant = Color(0xFF757575), // Gray
+    surfaceTint = Color(0xFFF9A825), // Yellow 800
+    inverseSurface = Color(0xFF212121), // Black
+    inverseOnSurface = Color(0xFFFFFFFF), // White
+    error = Color(0xFFE53935), // Red 600
+    onError = Color(0xFFFFFFFF), // White
+    errorContainer = Color(0xFFFFCDD2), // Red 100
+    onErrorContainer = Color(0xFF212121), // Black
+    outline = Color(0xFFBDBDBD), // Gray 400
+    outlineVariant = Color(0xFFEEEEEE), // Light Gray
+    scrim = Color(0x99000000), // Black with 60% opacity
+    surfaceBright = Color(0xFFFFFFFF), // White
+    surfaceDim = Color(0xFFF5F5F5), // Light Gray
+    surfaceContainer = Color(0xFFEEEEEE), // Light Gray
+    surfaceContainerHigh = Color(0xFFE0E0E0), // Gray 200
+    surfaceContainerHighest = Color(0xFFBDBDBD), // Gray 400
+    surfaceContainerLow = Color(0xFFF5F5F5), // Light Gray
+    surfaceContainerLowest = Color(0xFFFFFFFF) // White
 )
-@Composable
-fun greenDarkColorScheme():
-        ColorScheme
-        = ColorScheme(
-    primary =                   Colors.greenDarkPrimary,
-    onPrimary =                 Colors.greenDarkOnPrimary,
-    primaryContainer =          Colors.greenDarkPrimaryContainer,
-    onPrimaryContainer =        Colors.greenDarkOnPrimaryContainer,
-    inversePrimary =            Colors.greenDarkInversePrimary,
-    secondary =                 Colors.greenDarkSecondary,
-    onSecondary =               Colors.greenDarkOnSecondary,
-    secondaryContainer =        Colors.greenDarkSecondaryContainer,
-    onSecondaryContainer =      Colors.greenDarkOnSecondaryContainer,
-    tertiary =                  Colors.greenDarkTertiary,
-    onTertiary =                Colors.greenDarkOnTertiary,
-    tertiaryContainer =         Colors.greenDarkTertiaryContainer,
-    onTertiaryContainer =       Colors.greenDarkOnTertiaryContainer,
-    background =                Colors.greenDarkBackground,
-    onBackground =              Colors.greenDarkOnBackground,
-    surface =                   Colors.greenDarkSurface,
-    onSurface =                 Colors.greenDarkOnSurface,
-    surfaceVariant =            Colors.greenDarkSurfaceVariant,
-    onSurfaceVariant =          Colors.greenDarkOnSurfaceVariant,
-    surfaceTint =               Colors.greenDarkSurfaceTint,
-    inverseSurface =            Colors.greenDarkInverseSurface,
-    inverseOnSurface =          Colors.greenDarkInverseOnSurface,
-    error =                     Colors.greenDarkError,
-    onError =                   Colors.greenDarkOnError,
-    errorContainer =            Colors.greenDarkErrorContainer,
-    onErrorContainer =          Colors.greenDarkOnErrorContainer,
-    outline =                   Colors.greenDarkOutline,
-    outlineVariant =            Colors.greenDarkOutlineVariant,
-    scrim = Color.Black
+
+// Dark Colors
+// Dark Colors
+val DarkColorScheme = ColorScheme(
+    primary = Color(0xFFFFEB3B), // Yellow 600
+    onPrimary = Color(0xFF212121), // Black
+    primaryContainer = Color(0xFFF9A825), // Yellow 800
+    onPrimaryContainer = Color(0xFFFFFFFF), // White
+    inversePrimary = Color(0xFFF9A825), // Yellow 800
+    secondary = Color(0xFF42A5F5), // Blue 400
+    onSecondary = Color(0xFF212121), // Black
+    secondaryContainer = Color(0xFF64B5F6), // Blue 300
+    onSecondaryContainer = Color(0xFFFFFFFF), // White
+    tertiary = Color(0xFF66BB6A), // Green 400
+    onTertiary = Color(0xFF212121), // Black
+    tertiaryContainer = Color(0xFF81C784), // Green 300
+    onTertiaryContainer = Color(0xFFFFFFFF), // White
+    background = Color(0xFF121212), // Dark Gray
+    onBackground = Color(0xFFFFFFFF), // White
+    surface = Color(0xFF1E1E1E), // Dark Gray
+    onSurface = Color(0xFFFFFFFF), // White
+    surfaceVariant = Color(0xFF2E2E2E), // Dark Gray
+    onSurfaceVariant = Color(0xFFBDBDBD), // Gray 400
+    surfaceTint = Color(0xFFFFEB3B), // Yellow 600
+    inverseSurface = Color(0xFFFFFFFF), // White
+    inverseOnSurface = Color(0xFF212121), // Black
+    error = Color(0xFFEF5350), // Red 400
+    onError = Color(0xFF212121), // Black
+    errorContainer = Color(0xFFE53935), // Red 600
+    onErrorContainer = Color(0xFFFFFFFF), // White
+    outline = Color(0xFF757575), // Gray 600
+    outlineVariant = Color(0xFF424242), // Dark Gray
+    scrim = Color(0x99000000), // Black with 60% opacity
+    surfaceBright = Color(0xFF2E2E2E), // Dark Gray
+    surfaceDim = Color(0xFF121212), // Dark Gray
+    surfaceContainer = Color(0xFF1E1E1E), // Dark Gray
+    surfaceContainerHigh = Color(0xFF2E2E2E), // Dark Gray
+    surfaceContainerHighest = Color(0xFF424242), // Dark Gray
+    surfaceContainerLow = Color(0xFF1E1E1E), // Dark Gray
+    surfaceContainerLowest = Color(0xFF121212) // Dark Gray
 )

@@ -51,3 +51,7 @@ class NetworkStateManager {
 
 val NetworkStateManager.NetworkModel.isLoading : Boolean
     get() = this.state == NetworkState.Loading
+val NetworkStateManager.NetworkModel.isNotError : Boolean
+    get() = this.state != NetworkState.Error
+val NetworkStateManager.NetworkModel.isError : Boolean
+    get() = this.state == NetworkState.Error

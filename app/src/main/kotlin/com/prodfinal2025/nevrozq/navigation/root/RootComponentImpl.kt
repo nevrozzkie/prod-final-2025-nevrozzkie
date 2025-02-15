@@ -1,0 +1,72 @@
+package com.prodfinal2025.nevrozq.navigation.root
+
+import android.app.Application
+import android.content.Context
+import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
+import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.active
+import com.arkivanov.decompose.router.stack.bringToFront
+import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.prodfinal2025.nevrozq.navigation.root.RootComponent.Child
+import com.prodfinal2025.nevrozq.navigation.root.RootComponent.Child.FinanceChild
+import com.prodfinal2025.nevrozq.navigation.root.RootComponent.Child.MainChild
+import com.prodfinal2025.nevrozq.navigation.root.RootComponent.Config
+import finance.FinanceComponent
+import main.MainComponent
+import socialFeed.SocialFeedComponent
+import kotlin.reflect.KClass
+
+class RootComponentImpl(
+    private val activity: ComponentActivity,
+    componentContext: ComponentContext,
+    private val storeFactory: StoreFactory
+) : RootComponent, ComponentContext by componentContext {
+    private val nav = StackNavigation<Config>()
+
+    private val _stack = childStack(
+        source = nav,
+        serializer = Config.serializer(),
+        initialConfiguration = Config.Main,
+        childFactory = ::child,
+    )
+
+    override val stack = _stack
+
+    private fun child(config: Config, childContext: ComponentContext): Child =
+        when (config) {
+            Config.Main -> MainChild(
+                MainComponent(childContext, storeFactory)
+            )
+
+            Config.Finance -> FinanceChild(
+                FinanceComponent(childContext, storeFactory)
+            )
+
+            Config.SocialFeed -> Child.SocialFeedChild(
+                SocialFeedComponent(childContext, storeFactory)
+            )
+        }
+
+
+    override fun onBackClicked() {
+        popOnce(child = stack.active.instance::class)
+    }
+
+    private fun popOnce(child: KClass<out Child>) {
+
+        if (stack.active.configuration is Config.Main) {
+            activity.finish()
+        }
+        else if (child.isInstance(stack.active.instance)) {
+            nav.pop()
+        }
+    }
+
+    override fun onOutput(config: Config) {
+        nav.bringToFront(config)
+    }
+}

@@ -7,8 +7,7 @@ val mainModule = module {
         KtorMainRemoteDataSource(
             hcStock = get(named(HttpConstants.Stock.CLIENT_NAME)),
             hcExchange = get(named(HttpConstants.Exchange.CLIENT_NAME)),
-            hcNews = get(named(HttpConstants.News.CLIENT_NAME)),
-            hcDefault = get(named(HttpConstants.Default.CLIENT_NAME))
+            hcNews = get(named(HttpConstants.News.CLIENT_NAME))
         )
     }
 

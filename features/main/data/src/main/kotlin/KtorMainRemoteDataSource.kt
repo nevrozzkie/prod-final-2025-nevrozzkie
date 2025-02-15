@@ -9,6 +9,7 @@ import ktor.HttpConstants.News.TOKEN
 import ktor.HttpConstants.News.TOKEN_HEADER
 import ktor.dBody
 import ktor.dGet
+import ktor.fetchBitmap
 import utils.RFetchCompanyInfoResponse
 import utils.RFetchExchangeRateResponse
 import utils.RFetchNewsResponse
@@ -24,7 +25,7 @@ private object Paths {
 
     object News {
         private const val PRE_PATH = "svc/news/v3/"
-        const val FETCH_RECENT = PRE_PATH + "content/all/all.json"
+        const val FETCH_RECENT = PRE_PATH + "content/all/business.json"
     }
 }
 
@@ -32,8 +33,7 @@ private object Paths {
 class KtorMainRemoteDataSource(
     private val hcStock: HttpClient,
     private val hcExchange: HttpClient,
-    private val hcNews: HttpClient,
-    private val hcDefault: HttpClient,
+    private val hcNews: HttpClient
 ) {
 
     suspend fun fetchRecentNewsData(): RFetchNewsResponse {
@@ -72,15 +72,6 @@ class KtorMainRemoteDataSource(
         ) //hcExchange.dGet(path, saveForSeconds = 60 * 60).dBody()
     }
 
-
-    suspend fun fetchBitmap(url: String): Bitmap? {
-        return try {
-            val bytes =
-                hcDefault.dGet(Url(url), 60 * 60).readRawBytes()
-            BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-        } catch (e: Throwable) {
-            println("fetch bitmapError $e")
-            return null
-        }
-    }
+    suspend fun fetchTickerLogoBitmap(url: String): Bitmap? = hcStock.fetchBitmap(url)
+    suspend fun fetchNewsImageBitmap(url: String): Bitmap? = hcNews.fetchBitmap(url)
 }

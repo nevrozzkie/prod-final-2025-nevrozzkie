@@ -35,53 +35,32 @@ data object HttpConstants {
         const val HOST = "v6.exchangerate-api.com/v6"
         const val TOKEN = "bf0ad224573b24404c2e70a4"
     }
-
-    data object Default {
-        const val CLIENT_NAME = "HttpClientDefault"
-    }
 }
 
 
 internal val ktorModule = module {
-    single<HttpClient>(named(HttpConstants.Default.CLIENT_NAME)) {
-        HttpClientFactory().createFactory(
-            androidContext = get()
-        ) {
-        }
-    }
 
     with(HttpConstants.Exchange) {
         single<HttpClient>(named(CLIENT_NAME)) {
             HttpClientFactory().createFactory(get()) {
-                url {
-                    host = "$HOST/$TOKEN/pair"
-                }
-
+                host = "$HOST/$TOKEN/pair"
             }
         }
     }
 
     with(HttpConstants.News) {
         single<HttpClient>(named(CLIENT_NAME)) {
-            HttpClientFactory().createFactory(
-                get()
-            ) {
-                url {
-                    host = HOST
-                }
+            HttpClientFactory().createFactory(get()) {
+                host = HOST
             }
         }
     }
 
     with(HttpConstants.Stock) {
         single<HttpClient>(named(CLIENT_NAME)) {
-            HttpClientFactory().createFactory(
-                get()
-            ) {
+            HttpClientFactory().createFactory(get()) {
                 header(TOKEN_HEADER, TOKEN)
-                url {
-                    host = HOST
-                }
+                host = HOST
             }
         }
     }

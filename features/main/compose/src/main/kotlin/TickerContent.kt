@@ -64,6 +64,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import base.NetworkCrossfade
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import decompose.isLoading
+import decompose.isNotError
 import tickers.TickersComponent
 import tickers.TickersStore
 import utils.Ticker
@@ -79,75 +81,83 @@ fun TickerContent(
 
     val tickers = model.searchTickers.ifEmpty { model.mainTickers }
 
-    AnimatedVisibility(
-        true,
-        enter = expandIn(expandFrom = Alignment.BottomStart)
-    ) {
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(horizontal = Paddings.hMainContainer),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
+    if (networkModel.isNotError) {
+        AnimatedVisibility(
+            tickers.isNotEmpty(),
+            enter = expandIn(expandFrom = Alignment.BottomStart)
         ) {
-            Switch(
-                checked = model.isConverted,
-                onCheckedChange = {
-                    component.onDispatch(TickersStore.Message.IsConvertedChanged(it))
-                },
-                thumbContent = {
-                    Text(
-                        if (model.isConverted) "₽" else "$"
-                    )
-                },
-                colors = SwitchDefaults.colors(
-                    uncheckedThumbColor = MaterialTheme.colorScheme.surfaceContainer,
-                    uncheckedBorderColor = MaterialTheme.colorScheme.surfaceContainerHighest
-                )
-            )
-
-            NetworkCrossfade(
-                networkModel,
-                modifier = Modifier.size(48.dp),
-                label = "syncTickersCrossfade"
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = Paddings.hMainContainer),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
             ) {
-                IconButton(
-                    onClick = {
-                        component.onEvent(TickersStore.Intent.FetchMainTickers)
+                Switch(
+                    checked = model.isConverted,
+                    onCheckedChange = {
+                        component.onDispatch(TickersStore.Message.IsConvertedChanged(it))
                     },
+                    thumbContent = {
+                        Text(
+                            if (model.isConverted) "₽" else "$"
+                        )
+                    },
+                    colors = SwitchDefaults.colors(
+                        uncheckedThumbColor = MaterialTheme.colorScheme.surfaceContainer,
+                        uncheckedBorderColor = MaterialTheme.colorScheme.surfaceContainerHighest
+                    )
+                )
+
+                NetworkCrossfade(
+                    networkModel,
+                    modifier = Modifier.size(48.dp),
+                    label = "syncTickersCrossfade"
                 ) {
-                    Icon(Icons.Rounded.Sync, null)
+                    IconButton(
+                        onClick = {
+                            component.onEvent(TickersStore.Intent.FetchMainTickers)
+                        },
+                    ) {
+                        Icon(Icons.Rounded.Sync, null)
+                    }
+                }
+                Spacer(Modifier.weight(1f))
+                IconButton(
+                    onClick = {},
+                    // cuz we buttonSize = 48.dp iconSize = 24.dp
+                    modifier = Modifier.offset(x = 12.dp)
+                ) {
+                    Icon(Icons.Rounded.Menu, null)
                 }
             }
-            Spacer(Modifier.weight(1f))
-            IconButton(
-                onClick = {},
-                // cuz we buttonSize = 48.dp iconSize = 24.dp
-                modifier = Modifier.offset(x = 12.dp)
-            ) {
-                Icon(Icons.Rounded.Menu, null)
-            }
         }
-    }
 
-    LazyRow(Modifier) {
-        item {
-            Spacer(Modifier.width(Paddings.hMainContainer))
-        }
-        if (tickers.isNotEmpty()) {
-            items(tickers) { ticker ->
-                HorizontalTicker(ticker, model.isConverted)
-                Spacer(Modifier.width(Paddings.semiMedium))
+        LazyRow(Modifier) {
+            item {
+                Spacer(Modifier.width(Paddings.hMainContainer))
             }
-        } else {
-            items(3) {
-                HorizontalTickerPlaceholder()
-                Spacer(Modifier.width(Paddings.semiMedium))
+            if (tickers.isNotEmpty()) {
+                items(tickers, key = { it.title }) { ticker ->
+                    HorizontalTicker(ticker, model.isConverted)
+                    Spacer(Modifier.width(Paddings.semiMedium))
+                }
+            } else {
+                items(3) {
+                    HorizontalTickerPlaceholder()
+                    Spacer(Modifier.width(Paddings.semiMedium))
+                }
+            }
+            item {
+                Spacer(Modifier.width(Paddings.hMainContainer - 10.dp))
             }
         }
-        item {
-            Spacer(Modifier.width(Paddings.hMainContainer - 10.dp))
-        }
+    } else {
+        ErrorCard(
+            modifier = Modifier.fillMaxWidth()
+            .padding(horizontal = Paddings.hMainContainer)
+                .height(100.dp),
+            networkModel = networkModel)
     }
 }
 
@@ -157,7 +167,8 @@ private fun HorizontalTickerPlaceholder() {
         modifier = Modifier
             .clip(MaterialTheme.shapes.large)
             .background(
-                shimmerAnimation())
+                shimmerAnimation()
+            )
             .width(250.dp)
             .height(100.dp)
     ) {

@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeContentPadding
@@ -20,28 +21,38 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.defaultComponentContext
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.prodfinal2025.nevrozq.navigation.RootComponentImpl
-import com.prodfinal2025.nevrozq.navigation.RootContent
+import com.prodfinal2025.nevrozq.navigation.root.RootComponentImpl
+import com.prodfinal2025.nevrozq.navigation.root.RootContent
 import coreModule
+import financeModule
 import mainModule
 import koin.Inject
+import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import org.koin.core.context.stopKoin
+import org.koin.dsl.koinApplication
 import view.theme.AppTheme
 import view.LocalViewManager
 import view.ThemeTint
 import view.getViewManager
 
 class MainActivity : ComponentActivity() {
+    override fun finish() {
+        stopKoin()
+        super.finish()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         startKoin {
             androidLogger()
             androidContext(this@MainActivity)
             modules(
                 coreModule,
-                mainModule
+                mainModule,
+                financeModule
             )
         }
         enableEdgeToEdge()
@@ -50,7 +61,8 @@ class MainActivity : ComponentActivity() {
 
         val rootComponent = RootComponentImpl(
             componentContext = defaultComponentContext(),
-            storeFactory = DefaultStoreFactory()
+            storeFactory = DefaultStoreFactory(),
+            activity = this
         )
 
         setContent {
@@ -64,7 +76,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         Button(
-                            modifier = Modifier.align(Alignment.BottomEnd).safeContentPadding(),
+                            modifier = Modifier.align(Alignment.CenterStart).safeContentPadding(),
                             onClick = {
                                 viewManager.tint.value =
                                     if (viewManager.isDark.value)  ThemeTint.Light

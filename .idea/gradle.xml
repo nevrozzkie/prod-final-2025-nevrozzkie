@@ -25,11 +25,21 @@
             <option value="$PROJECT_DIR$/buildSrc" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/features" />
+            <option value="$PROJECT_DIR$/features/finance" />
+            <option value="$PROJECT_DIR$/features/finance/api" />
+            <option value="$PROJECT_DIR$/features/finance/compose" />
+            <option value="$PROJECT_DIR$/features/finance/data" />
+            <option value="$PROJECT_DIR$/features/finance/presentation" />
             <option value="$PROJECT_DIR$/features/main" />
             <option value="$PROJECT_DIR$/features/main/api" />
             <option value="$PROJECT_DIR$/features/main/compose" />
             <option value="$PROJECT_DIR$/features/main/data" />
             <option value="$PROJECT_DIR$/features/main/presentation" />
+            <option value="$PROJECT_DIR$/features/social-feed" />
+            <option value="$PROJECT_DIR$/features/social-feed/api" />
+            <option value="$PROJECT_DIR$/features/social-feed/compose" />
+            <option value="$PROJECT_DIR$/features/social-feed/data" />
+            <option value="$PROJECT_DIR$/features/social-feed/presentation" />
             <option value="$PROJECT_DIR$/utils" />
             <option value="$PROJECT_DIR$/utils-compose" />
           </set>

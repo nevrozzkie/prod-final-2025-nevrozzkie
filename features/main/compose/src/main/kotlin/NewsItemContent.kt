@@ -1,12 +1,15 @@
-import android.widget.Space
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -18,23 +21,47 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.prodfinal2025.nevrozq.R
+import decompose.NetworkStateManager
+import decompose.isError
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format
-import kotlinx.datetime.format.DateTimeFormat
 import kotlinx.datetime.format.char
+import main.MainStore
 import utils.NewsItem
 import view.theme.Paddings
-import java.time.format.DateTimeFormatter
+
+
+fun LazyListScope.newsItemsContent(
+    model: MainStore.State,
+    networkModel: NetworkStateManager.NetworkModel,
+) {
+    if (networkModel.isError) {
+        item {
+            Spacer(Modifier.height(Paddings.large))
+            ErrorCard(networkModel = networkModel)
+        }
+    }
+
+    val newsItems = model.news
+    if (newsItems.isNotEmpty()) {
+        items(newsItems) {
+            NewsItemContent(it)
+        }
+    } else {
+        items(5) {
+            NewsItemPlaceholder()
+        }
+    }
+}
+
 
 @Composable
-fun NewsItemContent(
+private fun NewsItemContent(
     newsItem: NewsItem
 ) {
     val image =
@@ -93,10 +120,10 @@ fun NewsItemContent(
                     Text(
                         buildAnnotatedString {
                             if (newsItem.source.isNotEmpty()) append(newsItem.source)
-                            if (newsItem.source.isNotEmpty() && !newsItem.section.isNullOrEmpty()) append(
+                            if (newsItem.source.isNotEmpty() && !newsItem.geo.isNullOrEmpty()) append(
                                 " · "
                             )
-                            if (!newsItem.section.isNullOrEmpty()) append(newsItem.section)
+                            if (!newsItem.geo.isNullOrEmpty()) append(newsItem.geo)
                         }
                     )
                     Text(
@@ -113,5 +140,21 @@ fun NewsItemContent(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun NewsItemPlaceholder() {
+    Spacer(Modifier.height(Paddings.large))
+    Box(
+        modifier = Modifier
+            .padding(horizontal = Paddings.hMainContainer)
+            .clip(MaterialTheme.shapes.large)
+            .background(
+                shimmerAnimation()
+            )
+            .fillMaxWidth()
+            .height(500.dp)
+    ) {
     }
 }

@@ -1,5 +1,7 @@
 package ktor
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -15,6 +17,7 @@ import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.client.statement.readBytes
+import io.ktor.client.statement.readRawBytes
 import io.ktor.client.statement.request
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
@@ -81,6 +84,16 @@ suspend fun HttpClient.dGet(
     return response
 }
 
+suspend fun HttpClient.fetchBitmap(url: String): Bitmap? {
+    return try {
+        val bytes =
+            this.dGet(Url(url), 60 * 60).readRawBytes()
+        BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+    } catch (e: Throwable) {
+        println("fetch bitmapError $e")
+        return null
+    }
+}
 
 // DefaultBody
 suspend inline fun <reified T> HttpResponse.dBody(): T {

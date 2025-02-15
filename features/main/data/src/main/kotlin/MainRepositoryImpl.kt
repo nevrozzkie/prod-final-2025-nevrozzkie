@@ -21,7 +21,7 @@ class MainRepositoryImpl(
                 val exchangeRate =
                     remoteDataSource.fetchExchangeRateToRuble(info.currency).conversionRate
 
-                val logo = remoteDataSource.fetchBitmap(info.logo)
+                val logo = remoteDataSource.fetchTickerLogoBitmap(info.logo)
 
 
                 Ticker(
@@ -38,14 +38,14 @@ class MainRepositoryImpl(
     override suspend fun fetchRecentNews(): List<NewsItem> {
         return remoteDataSource.fetchRecentNewsData().news.map {
             val imageUrl = it.media.maxByOrNull { i -> i.height * i.width }?.url
-            val image = imageUrl?.let { remoteDataSource.fetchBitmap(imageUrl) }
+            val image = imageUrl?.let { remoteDataSource.fetchNewsImageBitmap(imageUrl) }
 
             NewsItem(
                 title = it.title,
                 desc = it.desc,
                 imageBitmap = image,
                 source = it.source,
-                section = it.subsection.ifEmpty { it.section },
+                geo = it.geo.minByOrNull { g -> g.length },
                 date = it.date.toLocalDateTime(TimeZone.currentSystemDefault()).date
             )
         }

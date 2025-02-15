@@ -31,7 +31,7 @@ class MainExecutor(
                 networkStateManager.nSuccess()
             } catch (e: Throwable) {
                 networkStateManager.nError(
-                    errorTitle = "Не удалось загрузить последние новости",
+                    errorTitle = "Не удалось обновить новости",
                     errorDesc = ""
                 ) {
                     fetchRecentNews()

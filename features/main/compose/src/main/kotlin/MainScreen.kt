@@ -53,9 +53,7 @@ private fun MainContent(
             item {
                 TickerContent(tickersComponent)
             }
-            items(model.news) {
-                NewsItemContent(it)
-            }
+            newsItemsContent(model, networkModel)
             item {
                 Spacer(Modifier.height(Paddings.bottomScrollPadding))
             }

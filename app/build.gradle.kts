@@ -43,6 +43,10 @@ android {
 dependencies {
     implementation(project(":features:main:compose"))
     implementation(project(":features:main:data"))
+    implementation(project(":features:finance:compose"))
+    implementation(project(":features:finance:data"))
+    implementation(project(":features:social-feed:compose"))
+    implementation(project(":features:social-feed:data"))
 
     implementation(libs.decompose.compose)
 
@@ -57,6 +61,7 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.icons)
+    implementation(libs.androidx.compose.icons.extended)
     implementation(libs.androidx.compose.ui.tooling)
 
     implementation(project(":core"))

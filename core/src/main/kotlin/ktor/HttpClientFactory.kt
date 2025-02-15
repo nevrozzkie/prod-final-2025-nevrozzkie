@@ -49,7 +49,7 @@ import kotlin.math.max
 class HttpClientFactory {
     fun createFactory(
         androidContext: Context,
-//        block: HttpClientConfig<AndroidEngineConfig>.() -> Unit = {},
+        block: HttpClientConfig<AndroidEngineConfig>.() -> Unit = {},
         defaultRequestBlock: (DefaultRequest.DefaultRequestBuilder.() -> Unit)? = null
     ) =
         HttpClient(Android) {

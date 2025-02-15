@@ -5,10 +5,13 @@ import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.parameter
 import io.ktor.client.statement.readRawBytes
 import io.ktor.http.Url
+import ktor.HttpConstants.News.TOKEN
+import ktor.HttpConstants.News.TOKEN_HEADER
 import ktor.dBody
 import ktor.dGet
 import utils.RFetchCompanyInfoResponse
 import utils.RFetchExchangeRateResponse
+import utils.RFetchNewsResponse
 import utils.RFetchTickerPriceResponse
 
 private object Paths {
@@ -19,6 +22,10 @@ private object Paths {
         const val FETCH_INFO = PRE_PATH + "stock/profile2"
     }
 
+    object News {
+        private const val PRE_PATH = "svc/news/v3/"
+        const val FETCH_RECENT = PRE_PATH + "content/all/all.json"
+    }
 }
 
 
@@ -28,6 +35,17 @@ class KtorMainRemoteDataSource(
     private val hcNews: HttpClient,
     private val hcDefault: HttpClient,
 ) {
+
+    suspend fun fetchRecentNewsData(): RFetchNewsResponse {
+        return with(Paths.News) {
+            hcNews.dGet(FETCH_RECENT, 0) {
+                parameter("limit", 5)
+                parameter(TOKEN_HEADER, TOKEN)
+            }.dBody()
+        }
+    }
+
+
     suspend fun fetchTickerData(id: String): Pair<RFetchCompanyInfoResponse, RFetchTickerPriceResponse> {
         return with(Paths.Stock) {
             val symbolParameter: HttpRequestBuilder.() -> Unit = {
@@ -49,17 +67,19 @@ class KtorMainRemoteDataSource(
 
     suspend fun fetchExchangeRateToRuble(from: String): RFetchExchangeRateResponse {
         val path = "$from/RUB"
-        return hcExchange.dGet(path, saveForSeconds = 60*60).dBody()
+        return RFetchExchangeRateResponse(
+            conversionRate = 93.0f
+        ) //hcExchange.dGet(path, saveForSeconds = 60 * 60).dBody()
     }
 
 
     suspend fun fetchBitmap(url: String): Bitmap? {
         return try {
             val bytes =
-                hcDefault.dGet(Url(url), 60*60).readRawBytes()
+                hcDefault.dGet(Url(url), 60 * 60).readRawBytes()
             BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
         } catch (e: Throwable) {
-            println("bitmapError $e")
+            println("fetch bitmapError $e")
             return null
         }
     }

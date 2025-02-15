@@ -29,6 +29,5 @@ fun CTopAppBar(
             modifier = Modifier.padding(horizontal = Paddings.hTopBar))
         extraContent()
         HorizontalDivider(Modifier.fillMaxWidth().height(1.dp))
-        Spacer(Modifier.height(Paddings.medium))
     }
 }

@@ -1,6 +1,9 @@
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
@@ -9,10 +12,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import base.CTopAppBar
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import main.MainComponent
 import tickers.TickersStore
+import view.theme.Paddings
 
 @Composable
 fun MainScreen(
@@ -26,9 +31,11 @@ fun MainScreen(
 private fun MainContent(
     component: MainComponent
 ) {
+    val model by component.model.subscribeAsState()
+    val networkModel by component.networkStateManager.networkModel.subscribeAsState()
+
     val tickersComponent = component.tickersComponent
-    val tickersModel by tickersComponent.model.subscribeAsState()
-    val tickersNetworkModel by tickersComponent.networkStateManager.networkModel.subscribeAsState()
+
     Scaffold(
         Modifier.fillMaxSize(),
         topBar = {
@@ -37,19 +44,20 @@ private fun MainContent(
             ) {
                 SearchRow()
             }
-        },
-        floatingActionButton = {
-            Button(onClick = {
-                component.tickersComponent.onEvent(TickersStore.Intent.LoadMainTickers)
-            }) {
-                Text(tickersNetworkModel.state.toString())
-            }
-        },
-        floatingActionButtonPosition = FabPosition.Start
+        }
     ) { padding ->
         LazyColumn(Modifier.padding(padding)) {
             item {
-                TickerContent(tickersModel, isConverted = false)
+                Spacer(Modifier.height(Paddings.medium))
+            }
+            item {
+                TickerContent(tickersComponent)
+            }
+            items(model.news) {
+                NewsItemContent(it)
+            }
+            item {
+                Spacer(Modifier.height(Paddings.bottomScrollPadding))
             }
         }
     }

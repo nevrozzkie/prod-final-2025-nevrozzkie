@@ -1,6 +1,7 @@
 package tickers
 
 import com.arkivanov.mvikotlin.core.store.Store
+import main.MainStore.Message
 import tickers.TickersStore.Intent
 import tickers.TickersStore.Label
 import tickers.TickersStore.State
@@ -14,12 +15,14 @@ interface TickersStore : Store<Intent, State, Label> {
     )
 
     sealed interface Intent {
-        data object LoadMainTickers : Intent
+        data object FetchMainTickers : Intent
     }
 
     sealed interface Message {
-        data class MainTickersUpdated(val tickers: List<Ticker>) : Message
-        data class SearchTickersUpdated(val tickers: List<Ticker>) : Message
+        data class MainTickersFetched(val tickers: List<Ticker>) : Message
+        data class SearchTODOTickersFetched(val tickers: List<Ticker>) : Message
+
+        data class IsConvertedChanged(val isConverted: Boolean) : Message
     }
 
     sealed interface Label

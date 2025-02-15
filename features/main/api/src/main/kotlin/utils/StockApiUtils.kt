@@ -10,7 +10,7 @@ data class Ticker(
     val currency: String,
     val rubles: Float,
     val percentageDelta: Float,
-    val logo: Bitmap?
+    val logoBitmap: Bitmap?
 )
 
 @Serializable

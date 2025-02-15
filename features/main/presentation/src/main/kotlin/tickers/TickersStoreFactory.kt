@@ -8,7 +8,7 @@ import tickers.TickersStore.State
 
 class TickersStoreFactory(
     private val storeFactory: StoreFactory,
-    private val executor: TickersExecutor
+    val executor: TickersExecutor
 ) {
 
     fun create(): TickersStore {

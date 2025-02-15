@@ -12,6 +12,7 @@ interface DefaultMVIComponent<Intent : Any, State : Any, Label : Any> {
         get() = store.asValue()
     val labels: Flow<Label>
         get() = store.labels
+
     fun onEvent(event: Intent) {
         store.accept(event)
     }

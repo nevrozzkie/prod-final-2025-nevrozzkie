@@ -3,8 +3,11 @@ package ktor
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.cache.storage.FileStorage
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.request.HttpRequestPipeline
 import io.ktor.client.request.header
 import io.ktor.http.URLProtocol
+import io.ktor.http.parameters
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -15,6 +18,9 @@ import java.nio.file.Paths
 data object HttpConstants {
     data object News {
         const val CLIENT_NAME = "HttpClientNews"
+        const val HOST = "api.nytimes.com"
+        const val TOKEN_HEADER = "api-key"
+        const val TOKEN = "SefpbOBF0C26dkV5vduYQWsebvOxNWoP"
     }
 
     data object Stock {
@@ -40,14 +46,6 @@ internal val ktorModule = module {
     single<HttpClient>(named(HttpConstants.Default.CLIENT_NAME)) {
         HttpClientFactory().createFactory(
             androidContext = get()
-//            block = {
-//                install(HttpCache) {
-//
-////                        val cacheFile = Files.createDirectories(Paths.get("build/cache")).toFile()
-//                    val cacheFile = File(androidContext().cacheDir, "ktor-cache")
-//                    publicStorage(FileStorage(cacheFile))
-//                }
-//            }
         ) {
         }
     }
@@ -65,16 +63,20 @@ internal val ktorModule = module {
 
     with(HttpConstants.News) {
         single<HttpClient>(named(CLIENT_NAME)) {
-            HttpClientFactory().createFactory(get()
+            HttpClientFactory().createFactory(
+                get()
             ) {
-
+                url {
+                    host = HOST
+                }
             }
         }
     }
 
     with(HttpConstants.Stock) {
         single<HttpClient>(named(CLIENT_NAME)) {
-            HttpClientFactory().createFactory(get()
+            HttpClientFactory().createFactory(
+                get()
             ) {
                 header(TOKEN_HEADER, TOKEN)
                 url {

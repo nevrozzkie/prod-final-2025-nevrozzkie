@@ -1,14 +1,14 @@
-import android.graphics.Bitmap
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import utils.NewsItem
 import utils.Ticker
 
 class MainRepositoryImpl(
     private val remoteDataSource: KtorMainRemoteDataSource
 ) : MainRepository {
-    private val exchangeRates = mutableMapOf<String, Float>()
-    private val logoBitmaps = mutableMapOf<String, Bitmap>()
     override suspend fun fetchTickers(ids: List<String>): List<Ticker> =
         coroutineScope {
             val tickerResponses = ids.map { id ->
@@ -21,20 +21,34 @@ class MainRepositoryImpl(
                 val exchangeRate =
                     remoteDataSource.fetchExchangeRateToRuble(info.currency).conversionRate
 
-                val logo = logoBitmaps.getOrElse(info.logo) {
-                    val bitmap = remoteDataSource.fetchBitmap(info.logo)
-                    if (bitmap != null) logoBitmaps[info.logo] = bitmap
-                    bitmap
-                }
+                val logo = remoteDataSource.fetchBitmap(info.logo)
+
+
                 Ticker(
                     title = info.title,
                     price = price.price,
                     currency = info.currency,
                     rubles = price.price * exchangeRate,
                     percentageDelta = price.percentageDelta,
-                    logo = logo
+                    logoBitmap = logo
                 )
             }
         }
+
+    override suspend fun fetchRecentNews(): List<NewsItem> {
+        return remoteDataSource.fetchRecentNewsData().news.map {
+            val imageUrl = it.media.maxByOrNull { i -> i.height * i.width }?.url
+            val image = imageUrl?.let { remoteDataSource.fetchBitmap(imageUrl) }
+
+            NewsItem(
+                title = it.title,
+                desc = it.desc,
+                imageBitmap = image,
+                source = it.source,
+                section = it.subsection.ifEmpty { it.section },
+                date = it.date.toLocalDateTime(TimeZone.currentSystemDefault()).date
+            )
+        }
+    }
 
 }

@@ -2,6 +2,7 @@ package tickers
 
 import MainRepository
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import decompose.DefaultCoroutineExecutor
 import decompose.NetworkStateManager
 import koin.Inject
 import kotlinx.coroutines.launch
@@ -13,17 +14,14 @@ import tickers.TickersStore.Message
 class TickersExecutor(
     private val mainRepository: MainRepository = Inject.instance(),
     private val networkStateManager: NetworkStateManager
-) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
-
-
+) : DefaultCoroutineExecutor<Intent, Unit, State, Message, Label>() {
     override fun executeIntent(intent: Intent) {
         when (intent) {
-            Intent.LoadMainTickers -> loadMainTickers()
+            Intent.FetchMainTickers -> fetchMainTickers()
         }
     }
 
-
-    private fun loadMainTickers() {
+    private fun fetchMainTickers() {
         scope.launch {
             try {
                 networkStateManager.nStartLoading()
@@ -32,7 +30,7 @@ class TickersExecutor(
                         it
                     }
                 )
-                dispatch(Message.MainTickersUpdated(r))
+                dispatch(Message.MainTickersFetched(r))
                 networkStateManager.nSuccess()
             } catch (e: Throwable) {
                 println("MMM: ${e.message}")
@@ -40,7 +38,7 @@ class TickersExecutor(
                     errorTitle = "Не удалось загрузить тикеры",
                     errorDesc = ""
                 ) {
-                    loadMainTickers()
+                    fetchMainTickers()
                 }
             }
         }

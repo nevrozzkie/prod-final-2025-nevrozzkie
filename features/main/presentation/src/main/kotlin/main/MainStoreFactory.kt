@@ -9,7 +9,6 @@ import main.MainStore.Label
 import main.MainStore.State
 
 class MainStoreFactory(
-    private val mainRepository: MainRepository = Inject.instance(),
     private val storeFactory: StoreFactory,
     private val executor: MainExecutor,
 ) {
@@ -22,10 +21,8 @@ class MainStoreFactory(
         MainStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "MainStore",
-            initialState = MainStore.State(
-                news = mainRepository.getNewsFlow()
-            ),
+            initialState = MainStore.State(),
             executorFactory = ::executor,
-            reducer = MainReducer
+            reducer = { _ -> this} //MainReducer
         )
 }

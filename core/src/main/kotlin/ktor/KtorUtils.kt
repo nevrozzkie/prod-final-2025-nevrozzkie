@@ -77,7 +77,7 @@ suspend fun HttpClient.fetchByteArray(url: String, saveForSeconds: Int = 60*60):
     }
 }
 
-fun ByteArray.toImageBitmap(): Bitmap = BitmapFactory.decodeByteArray(this, 0, this.size)
+fun ByteArray?.toImageBitmap(): Bitmap? = this?.let {  BitmapFactory.decodeByteArray(this, 0, this.size) }
 
 // DefaultBody
 suspend inline fun <reified T> HttpResponse.dBody(): T {

@@ -1,6 +1,7 @@
 package view.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
@@ -25,7 +26,9 @@ fun AppTheme(isDarkPriority: Boolean = false, content: @Composable () -> Unit) {
     SystemBarsColorFix(viewManager)
 
     CompositionLocalProvider(
-        LocalThemeColors provides themeColors
+        LocalThemeColors provides themeColors,
+        // fix xiaomi dark theme with dark color
+        LocalContentColor provides colorScheme.onSurface
     ) {
         MaterialTheme(
             colorScheme = colorScheme.animated(),

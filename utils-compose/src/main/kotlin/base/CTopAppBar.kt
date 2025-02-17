@@ -1,6 +1,7 @@
 package base
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +15,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import kotlinx.serialization.Serializable
@@ -22,11 +24,15 @@ import view.theme.Paddings
 @Composable
 fun CTopAppBar(
     title: String,
+    titlePaddings: PaddingValues = PaddingValues(0.dp),
     extraContent: @Composable () -> Unit
 ) {
     Column(Modifier.displayCutoutPadding()) {
         Text(title, style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(horizontal = Paddings.hTopBar))
+            modifier = Modifier
+                .padding(horizontal = Paddings.hTopBar)
+                .padding(titlePaddings)
+        )
         extraContent()
         HorizontalDivider(Modifier.fillMaxWidth().height(4.dp))
     }

@@ -1,4 +1,6 @@
 import android.graphics.Bitmap
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -14,7 +16,15 @@ fun Float.roundTo(numFractionDigits: Int): Float {
     return (Math.round(this * divider) / divider)
 }
 
+suspend fun <T> withDatabaseContext(block: suspend () -> T): T {
+    return withIOContext(block)
+}
 
+suspend fun <T> withIOContext(block: suspend () -> T): T {
+    return withContext(Dispatchers.IO) {
+        block()
+    }
+}
 
 fun Bitmap.toByteArray(): ByteArray {
     val stream = ByteArrayOutputStream()

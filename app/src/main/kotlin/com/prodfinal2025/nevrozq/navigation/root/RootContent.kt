@@ -36,7 +36,7 @@ fun RootContent(
                 stack, component
             )
         }
-    ) { padding ->
+    ) { paddings ->
 
         Children(
             stack = stack,

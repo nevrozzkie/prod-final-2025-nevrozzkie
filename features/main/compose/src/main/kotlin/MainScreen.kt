@@ -33,7 +33,7 @@ private fun MainContent(
     component: MainComponent
 ) {
     val model by component.model.subscribeAsState()
-    val newsItems by model.news.collectAsState(initial = listOf())
+    val newsItems by model.newsFlow.collectAsState(initial = listOf())
     val networkModel by component.networkStateManager.networkModel.subscribeAsState()
 
     val tickersComponent = component.tickersComponent
@@ -47,8 +47,8 @@ private fun MainContent(
                 SearchRow()
             }
         }
-    ) { padding ->
-        LazyColumn(Modifier.padding(padding)) {
+    ) { paddings ->
+        LazyColumn(Modifier.padding(paddings)) {
             item {
                 TickerContent(tickersComponent)
             }

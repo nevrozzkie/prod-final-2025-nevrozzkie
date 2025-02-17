@@ -1,12 +1,10 @@
 package room
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -24,7 +22,7 @@ internal interface NewsDao {
     }
 
     @Update
-    suspend fun updateNewsItem(newsEntity: NewsEntity)
+    suspend fun updateNewsEntity(newsEntity: NewsEntity)
 
     @Query("SELECT * FROM news_table")
     fun getAllNewsEntities() : Flow<List<NewsEntity>>

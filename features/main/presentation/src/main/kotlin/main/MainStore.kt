@@ -1,8 +1,10 @@
 package main
 
+import MainRepository
 import NewsItem
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.mvikotlin.core.store.Store
+import koin.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,8 +16,7 @@ import main.MainStore.State
 
 interface MainStore : Store<Intent, State, Label> {
     data class State(
-        val news: Flow<List<NewsItem>>,
-        val isConverted: Boolean = false
+        val newsFlow: Flow<List<NewsItem>> = Inject.instance<MainRepository>().getNewsFlow()
     )
 
     sealed interface Intent {

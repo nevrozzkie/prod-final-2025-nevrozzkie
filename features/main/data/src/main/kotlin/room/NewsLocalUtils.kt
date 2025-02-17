@@ -4,13 +4,14 @@ import NewsItem
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import ktor.toImageBitmap
 import toLocalDate
 import toTimestamp
 
-@Entity(tableName = DatabaseNames.NEWS)
+@Entity(tableName = MainDatabaseNames.Tables.NEWS)
 internal data class NewsEntity(
     @PrimaryKey val id: String,
     val title: String,
@@ -22,7 +23,7 @@ internal data class NewsEntity(
     val date: Long,
     val insertInDBTimestamp: Long = Clock.System.now().toTimestamp()
 ) {
-    fun mapToNewsItem() = NewsItem(
+    fun toNewsItem() = NewsItem(
         title = title,
         desc = desc,
         imageBitmap = imageByteArray?.toImageBitmap(),
@@ -32,4 +33,8 @@ internal data class NewsEntity(
         date = date.toLocalDate(),
         id = id
     )
+}
+
+internal fun Flow<List<NewsEntity>>.mapToNewsItems() = this.map { list ->
+    list.map { it.toNewsItem() }
 }

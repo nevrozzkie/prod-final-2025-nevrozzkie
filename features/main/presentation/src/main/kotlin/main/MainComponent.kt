@@ -1,5 +1,7 @@
 package main
 
+import MainRepository
+import NewsItem
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.childContext
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
@@ -8,7 +10,8 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import decompose.DefaultMVIComponent
 import decompose.NetworkStateManager
-import main.MainReducer.reduce
+import koin.Inject
+import kotlinx.coroutines.flow.Flow
 import tickers.TickersComponent
 import tickers.TickersStore
 

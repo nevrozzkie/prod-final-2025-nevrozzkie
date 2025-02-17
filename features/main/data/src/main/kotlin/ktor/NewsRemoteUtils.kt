@@ -23,7 +23,7 @@ internal data class RNewsItem(
     @SerialName("published_date") val date: Instant?,
     @SerialName("multimedia")  val media: List<RNewsMultimedia>
 ) {
-    fun mapToEntity(id: String, imageByteArray: ByteArray?, isImageLoading: Boolean) = NewsEntity(
+    fun toEntity(id: String, imageByteArray: ByteArray?, isImageLoading: Boolean) = NewsEntity(
         id = id,
         title = title,
         desc = desc,

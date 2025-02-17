@@ -29,6 +29,7 @@ internal data class NewsEntity(
         source = source,
         geo = geo,
         isImageLoading = isImageLoading,
-        date = date.toLocalDate()
+        date = date.toLocalDate(),
+        id = id
     )
 }

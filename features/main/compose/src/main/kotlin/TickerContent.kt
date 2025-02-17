@@ -1,23 +1,7 @@
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandIn
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,10 +9,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -39,8 +21,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.material.icons.rounded.Repeat
-import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -55,8 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.buildAnnotatedString
@@ -64,7 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import base.NetworkCrossfade
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import decompose.isLoading
+import decompose.isError
 import decompose.isNotError
 import tickers.TickersComponent
 import tickers.TickersStore
@@ -80,91 +58,102 @@ fun TickerContent(
 
     val tickers = model.searchTickers.ifEmpty { model.mainTickers }
 
-    if (networkModel.isNotError) {
-        AnimatedVisibility(tickers.isEmpty()) {
-            Spacer(Modifier.height(Paddings.medium))
-        }
-        AnimatedVisibility(
-            tickers.isNotEmpty(),
-            enter = expandIn(expandFrom = Alignment.BottomStart)
-        ) {
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = Paddings.hMainContainer),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
-            ) {
 
+    AnimatedVerticalColumn(tickers.isEmpty()) {
 
-                IconButton(
-                    onClick = {}
+        Spacer(Modifier.height(Paddings.medium))
+    }
+    Crossfade(
+        networkModel.isNotError, label = "tickerNetworkStateAnimation") { isNotError ->
+        if (isNotError) {
+            Column {
+                AnimatedVerticalColumn(
+                    tickers.isNotEmpty()
                 ) {
-                    Icon(Icons.Rounded.Menu, null)
-                }
-
-                Spacer(Modifier.weight(1f))
-
-
-                NetworkCrossfade(
-                    networkModel,
-                    modifier = Modifier.size(48.dp),
-                    label = "syncTickersCrossfade"
-                ) {
-                    IconButton(
-                        onClick = {
-                            component.onEvent(TickersStore.Intent.FetchMainTickers)
-                        },
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = Paddings.hMainContainer),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
                     ) {
-                        Icon(Icons.Rounded.Sync, null)
+
+
+                        IconButton(
+                            onClick = {}
+                        ) {
+                            Icon(Icons.Rounded.Menu, null)
+                        }
+
+                        Spacer(Modifier.weight(1f))
+
+
+                        NetworkCrossfade(
+                            networkModel,
+                            modifier = Modifier.size(48.dp),
+                            label = "syncTickersCrossfade"
+                        ) {
+                            IconButton(
+                                onClick = {
+                                    component.onEvent(TickersStore.Intent.FetchMainTickers)
+                                },
+                            ) {
+                                Icon(Icons.Rounded.Sync, null)
+                            }
+                        }
+                        Switch(
+                            checked = model.isConverted,
+                            onCheckedChange = {
+                                component.onDispatch(TickersStore.Message.IsConvertedChanged(it))
+                            },
+                            thumbContent = {
+                                Text(
+                                    if (model.isConverted) "₽" else "$"
+                                )
+                            },
+                            colors = SwitchDefaults.colors(
+                                uncheckedThumbColor = MaterialTheme.colorScheme.surfaceContainer,
+                                uncheckedBorderColor = MaterialTheme.colorScheme.surfaceContainerHighest
+                            )
+                        )
+
                     }
                 }
-                Switch(
-                    checked = model.isConverted,
-                    onCheckedChange = {
-                        component.onDispatch(TickersStore.Message.IsConvertedChanged(it))
-                    },
-                    thumbContent = {
-                        Text(
-                            if (model.isConverted) "₽" else "$"
-                        )
-                    },
-                    colors = SwitchDefaults.colors(
-                        uncheckedThumbColor = MaterialTheme.colorScheme.surfaceContainer,
-                        uncheckedBorderColor = MaterialTheme.colorScheme.surfaceContainerHighest
-                    )
-                )
 
-            }
-        }
+                LazyRow(Modifier) {
+                    item {
+                        Spacer(Modifier.width(Paddings.hMainContainer))
+                    }
+                    if (tickers.isNotEmpty()) {
 
-        LazyRow(Modifier) {
-            item {
-                Spacer(Modifier.width(Paddings.hMainContainer))
-            }
-            if (tickers.isNotEmpty()) {
-                items(tickers, key = { it.title }) { ticker ->
-                    HorizontalTicker(ticker, model.isConverted)
-                    Spacer(Modifier.width(Paddings.semiMedium))
-                }
-            } else {
-                items(3) {
-                    HorizontalTickerPlaceholder()
-                    Spacer(Modifier.width(Paddings.semiMedium))
+                        items(tickers, key = { it.title }) { ticker ->
+                            AnimateRowItem {
+                                HorizontalTicker(ticker, model.isConverted)
+                                Spacer(Modifier.width(Paddings.semiMedium))
+                            }
+                        }
+                    } else {
+                        items(3) {
+                            AnimateRowItem {
+                                HorizontalTickerPlaceholder()
+                                Spacer(Modifier.width(Paddings.semiMedium))
+                            }
+                        }
+                    }
+                    item {
+                        Spacer(Modifier.width(Paddings.hMainContainer - 10.dp))
+                    }
                 }
             }
-            item {
-                Spacer(Modifier.width(Paddings.hMainContainer - 10.dp))
-            }
+        } else {
+            ErrorCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = Paddings.hMainContainer)
+                    .height(100.dp),
+                networkModel = networkModel
+            )
         }
-    } else {
-        ErrorCard(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = Paddings.hMainContainer)
-                .height(100.dp),
-            networkModel = networkModel
-        )
     }
 }
 

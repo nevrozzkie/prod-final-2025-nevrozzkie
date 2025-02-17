@@ -2,6 +2,7 @@ import android.graphics.Bitmap
 import kotlinx.datetime.LocalDate
 
 data class NewsItem(
+    val id: String,
     val title: String,
     val desc: String,
     val imageBitmap: Bitmap?,

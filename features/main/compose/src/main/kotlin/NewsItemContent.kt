@@ -1,3 +1,4 @@
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,15 +26,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.prodfinal2025.nevrozq.R
 import com.prodfinal2025.nevrozq.features.compose.R.drawable.prod_placeholder
 import decompose.NetworkStateManager
 import decompose.isError
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format
 import kotlinx.datetime.format.char
-import main.MainStore
-import NewsItem
 import androidx.compose.ui.graphics.Color
 import view.theme.Paddings
 
@@ -42,19 +40,24 @@ fun LazyListScope.newsItemsContent(
     newsItems: List<NewsItem>,
     networkModel: NetworkStateManager.NetworkModel,
 ) {
-    if (networkModel.isError) {
-        item {
+    item {
+        AnimatedVerticalColumn(networkModel.isError) {
             Spacer(Modifier.height(Paddings.large))
             ErrorCard(networkModel = networkModel)
         }
     }
+
     if (newsItems.isNotEmpty()) {
-        items(newsItems) {
-            NewsItemContent(it)
+        items(newsItems, key = { it.id }) {
+            AnimateColumnItem {
+                NewsItemContent(it)
+            }
         }
     } else {
         items(5) {
-            NewsItemPlaceholder()
+            AnimateColumnItem {
+                NewsItemPlaceholder()
+            }
         }
     }
 }
@@ -92,20 +95,22 @@ private fun NewsItemContent(
         color = containerColor
     ) {
         Column(Modifier.padding(Paddings.medium)) {
-            if (newsItem.isImageLoading) {
-                NewsItemImagePlaceholder(imagePlaceholderShades)
-            } else {
-                Image(
-                    bitmap = image ?: painterResource(prod_placeholder).toImageBitmap(),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .clip(
-                            MaterialTheme.shapes.large
-                        ),
-                    contentScale = ContentScale.FillWidth
-                )
+            Crossfade(newsItem.isImageLoading, label = "imageNewsItemAnimation") { isImageLoading ->
+                if (isImageLoading) {
+                    NewsItemImagePlaceholder(imagePlaceholderShades)
+                } else {
+                    Image(
+                        bitmap = image ?: painterResource(prod_placeholder).toImageBitmap(),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .clip(
+                                MaterialTheme.shapes.large
+                            ),
+                        contentScale = ContentScale.FillWidth
+                    )
+                }
             }
 
             Text(

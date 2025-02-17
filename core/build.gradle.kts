@@ -4,6 +4,7 @@ plugins {
 
 
 dependencies {
+    implementation(project(":utils"))
     api(libs.koin.android)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)

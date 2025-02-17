@@ -7,7 +7,8 @@ import main.MainStore.Message
 object MainReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
-            is Message.NewsFetched -> copy(news = msg.news)
+            else -> copy()
+//            is Message.NewsFetched -> copy(news = msg.news)
         }
     }
 }

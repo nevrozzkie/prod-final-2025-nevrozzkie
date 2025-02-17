@@ -2,32 +2,16 @@ package ktor
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.call.save
-import io.ktor.client.plugins.isSaved
-import io.ktor.client.plugins.retry
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.request.header
-import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
-import io.ktor.client.statement.bodyAsText
-import io.ktor.client.statement.readBytes
 import io.ktor.client.statement.readRawBytes
-import io.ktor.client.statement.request
 import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.URLBuilder
-import io.ktor.http.URLProtocol
 import io.ktor.http.Url
-import io.ktor.http.append
-import io.ktor.http.cacheControl
-import io.ktor.http.cio.parseMultipart
-import io.ktor.http.maxAge
 import io.ktor.http.path
 import io.ktor.util.AttributeKey
 import io.ktor.util.reflect.typeInfo
@@ -84,16 +68,16 @@ suspend fun HttpClient.dGet(
     return response
 }
 
-suspend fun HttpClient.fetchBitmap(url: String): Bitmap? {
+suspend fun HttpClient.fetchByteArray(url: String, saveForSeconds: Int = 60*60): ByteArray? {
     return try {
-        val bytes =
-            this.dGet(Url(url), 60 * 60).readRawBytes()
-        BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+        this.dGet(Url(url), saveForSeconds).readRawBytes()
     } catch (e: Throwable) {
-        println("fetch bitmapError $e")
+        println("fetch bitmapArrayError $e")
         return null
     }
 }
+
+fun ByteArray.toImageBitmap(): Bitmap = BitmapFactory.decodeByteArray(this, 0, this.size)
 
 // DefaultBody
 suspend inline fun <reified T> HttpResponse.dBody(): T {

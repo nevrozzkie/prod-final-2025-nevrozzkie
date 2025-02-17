@@ -1,5 +1,6 @@
 plugins {
     id("presentation-setup")
+    kotlin("plugin.serialization")
 }
 
 

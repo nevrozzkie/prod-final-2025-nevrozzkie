@@ -9,8 +9,6 @@ import main.MainStore.Intent
 import main.MainStore.Label
 import main.MainStore.State
 import main.MainStore.Message
-import tickers.TickersDefaults
-import tickers.TickersStore
 
 class MainExecutor(
     private val mainRepository: MainRepository = Inject.instance(),
@@ -18,23 +16,23 @@ class MainExecutor(
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
     override fun executeIntent(intent: Intent) {
         when (intent) {
-            Intent.FetchRecentNews -> fetchRecentNews()
+            Intent.OnInit -> fetchRecentNews(false)
         }
     }
 
-    private fun fetchRecentNews() {
+    private fun fetchRecentNews(mustBeFromInternet: Boolean) {
         scope.launch {
             try {
                 networkStateManager.nStartLoading()
-                val r = mainRepository.fetchRecentNews()
-                dispatch(Message.NewsFetched(r))
+                mainRepository.fetchRecentNews(mustBeFromInternet)
+//                dispatch(Message.NewsFetched(news))
                 networkStateManager.nSuccess()
             } catch (e: Throwable) {
                 networkStateManager.nError(
                     errorTitle = "Не удалось обновить новости",
                     errorDesc = ""
                 ) {
-                    fetchRecentNews()
+                    fetchRecentNews(mustBeFromInternet)
                 }
             }
         }

@@ -28,6 +28,6 @@ fun CTopAppBar(
         Text(title, style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(horizontal = Paddings.hTopBar))
         extraContent()
-        HorizontalDivider(Modifier.fillMaxWidth().height(2.dp))
+        HorizontalDivider(Modifier.fillMaxWidth().height(4.dp))
     }
 }

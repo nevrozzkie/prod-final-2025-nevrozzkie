@@ -47,7 +47,7 @@ fun DefaultNavigationBar(
         HorizontalDivider(
             Modifier
                 .fillMaxWidth()
-                .height(2.dp)
+                .height(4.dp)
         )
         NavigationBar(
             containerColor = backgroundColor

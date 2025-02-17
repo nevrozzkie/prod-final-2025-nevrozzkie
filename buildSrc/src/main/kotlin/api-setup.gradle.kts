@@ -4,10 +4,11 @@ import org.gradle.kotlin.dsl.kotlin
 val libs = the<LibrariesForLibs>()
 plugins {
     id("zero-setup")
-    kotlin("plugin.serialization")
+//    kotlin("plugin.serialization")
 }
 
 
 dependencies {
-    implementation(libs.kotlinx.serialization.json)
+//    implementation(libs.kotlinx.serialization.json)
+    api(libs.kotlinx.coroutines)
 }

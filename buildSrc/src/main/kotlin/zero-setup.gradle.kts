@@ -6,6 +6,7 @@ val libs = the<LibrariesForLibs>()
 plugins {
     kotlin("android")
     id("com.android.library")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -26,5 +27,7 @@ kotlin {
         kotlinOptions.jvmTarget = "17"
     }
 }
+
+
 
 

@@ -26,18 +26,20 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.prodfinal2025.nevrozq.R
+import com.prodfinal2025.nevrozq.features.compose.R.drawable.prod_placeholder
 import decompose.NetworkStateManager
 import decompose.isError
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format
 import kotlinx.datetime.format.char
 import main.MainStore
-import utils.NewsItem
+import NewsItem
+import androidx.compose.ui.graphics.Color
 import view.theme.Paddings
 
 
 fun LazyListScope.newsItemsContent(
-    model: MainStore.State,
+    newsItems: List<NewsItem>,
     networkModel: NetworkStateManager.NetworkModel,
 ) {
     if (networkModel.isError) {
@@ -46,8 +48,6 @@ fun LazyListScope.newsItemsContent(
             ErrorCard(networkModel = networkModel)
         }
     }
-
-    val newsItems = model.news
     if (newsItems.isNotEmpty()) {
         items(newsItems) {
             NewsItemContent(it)
@@ -76,28 +76,37 @@ private fun NewsItemContent(
         color = MaterialTheme.colorScheme.onSurface.copy(alpha = .5f)
     )
 
+    val imagePlaceholderShades = listOf(
+        MaterialTheme.colorScheme.surfaceContainerHighest.copy(0.9f),
+        MaterialTheme.colorScheme.surfaceContainerHighest.copy(0.2f),
+        MaterialTheme.colorScheme.surfaceContainerHighest.copy(0.9f)
+    )
+
     Spacer(Modifier.height(Paddings.large))
     Surface(
         shape = MaterialTheme.shapes.large,
-        color = containerColor,
         contentColor = contentColor,
         modifier = Modifier.padding(
             horizontal = Paddings.hMainContainer
-        )
+        ),
+        color = containerColor
     ) {
         Column(Modifier.padding(Paddings.medium)) {
-            Image(
-                bitmap = image ?: painterResource(R.drawable.prod_placeholder).toImageBitmap(),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .clip(
-                        MaterialTheme.shapes.large
-                    ),
-                contentScale = ContentScale.FillWidth
-
-            )
+            if (newsItem.isImageLoading) {
+                NewsItemImagePlaceholder(imagePlaceholderShades)
+            } else {
+                Image(
+                    bitmap = image ?: painterResource(prod_placeholder).toImageBitmap(),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .clip(
+                            MaterialTheme.shapes.large
+                        ),
+                    contentScale = ContentScale.FillWidth
+                )
+            }
 
             Text(
                 newsItem.title,
@@ -140,6 +149,23 @@ private fun NewsItemContent(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun NewsItemImagePlaceholder(shades: List<Color>) {
+    Box(
+        modifier = Modifier
+            .clip(
+                MaterialTheme.shapes.large
+            )
+
+            .background(
+                shimmerAnimation(shades)
+            )
+            .fillMaxWidth()
+            .height(200.dp)
+    ) {
     }
 }
 

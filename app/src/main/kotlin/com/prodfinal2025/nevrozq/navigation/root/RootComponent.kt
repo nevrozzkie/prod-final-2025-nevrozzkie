@@ -4,6 +4,7 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.backhandler.BackHandlerOwner
+import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import finance.FinanceComponent
 import main.MainComponent
 import kotlinx.serialization.Serializable

@@ -2,6 +2,7 @@ package main
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.childContext
+import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
@@ -13,13 +14,15 @@ import tickers.TickersStore
 
 class MainComponent(
     componentContext: ComponentContext,
-    private val storeFactory: StoreFactory
-) : ComponentContext by componentContext, DefaultMVIComponent<MainStore.Intent, MainStore.State, MainStore.Label> {
+    private val storeFactory: StoreFactory,
+    override val instanceKeeper: InstanceKeeper
+) : ComponentContext by componentContext,
+    DefaultMVIComponent<MainStore.Intent, MainStore.State, MainStore.Label> {
 
     val networkStateManager = NetworkStateManager()
 
     override val store: MainStore
-        get() = instanceKeeper.getStore() {
+        get() = instanceKeeper.getStore {
             MainStoreFactory(
                 storeFactory = storeFactory,
                 executor = MainExecutor(
@@ -35,7 +38,7 @@ class MainComponent(
 
     init {
         tickersComponent.onEvent(TickersStore.Intent.FetchMainTickers)
-        onEvent(MainStore.Intent.FetchRecentNews)
+        onEvent(MainStore.Intent.OnInit)
     }
 
 }

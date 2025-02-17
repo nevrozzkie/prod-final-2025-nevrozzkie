@@ -1,7 +1,7 @@
 [versions]
 accompanistSystemuicontroller = "0.27.0"
 agp = "8.7.3"
-kotlin = "2.0.21"
+kotlin = "2.1.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -23,9 +23,17 @@ decompose = "3.2.0"
 mvikotlin = "4.1.0" #"3.3.0" #4.0.0-alpha02
 ktor = "3.0.3"
 serialization = "1.7.3"
+room = "2.6.1"
+ksp = "2.1.0-1.0.29"
 
 
 [libraries]
+#room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+
+
 androidx-accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
@@ -66,6 +74,7 @@ ktor-client-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 
 
+
 #androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 #androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 #androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
@@ -76,11 +85,14 @@ plugin-convention-android = { module = "com.android.tools.build:gradle", version
 #plugin-convention-compose = { module = "org.jetbrains.compose:compose-gradle-plugin"}
 plugin-convention-compose-compiler = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 plugin-convention-serialization = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
-
+plugin-convention-room = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room" }
+plugin-convention-ksp = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+room = { id = "androidx.room", version.ref = "room" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 

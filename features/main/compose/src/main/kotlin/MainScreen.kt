@@ -10,6 +10,7 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -32,6 +33,7 @@ private fun MainContent(
     component: MainComponent
 ) {
     val model by component.model.subscribeAsState()
+    val newsItems by model.news.collectAsState(initial = listOf())
     val networkModel by component.networkStateManager.networkModel.subscribeAsState()
 
     val tickersComponent = component.tickersComponent
@@ -48,12 +50,9 @@ private fun MainContent(
     ) { padding ->
         LazyColumn(Modifier.padding(padding)) {
             item {
-                Spacer(Modifier.height(Paddings.medium))
-            }
-            item {
                 TickerContent(tickersComponent)
             }
-            newsItemsContent(model, networkModel)
+            newsItemsContent(newsItems, networkModel)
             item {
                 Spacer(Modifier.height(Paddings.bottomScrollPadding))
             }

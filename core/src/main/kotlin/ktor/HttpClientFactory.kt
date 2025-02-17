@@ -8,6 +8,7 @@ import io.ktor.client.engine.HttpClientEngineConfig
 import io.ktor.client.engine.android.Android
 import io.ktor.client.engine.android.AndroidClientEngine
 import io.ktor.client.engine.android.AndroidEngineConfig
+import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.HttpTimeout
@@ -52,7 +53,7 @@ class HttpClientFactory {
         block: HttpClientConfig<AndroidEngineConfig>.() -> Unit = {},
         defaultRequestBlock: (DefaultRequest.DefaultRequestBuilder.() -> Unit)? = null
     ) =
-        HttpClient(Android) {
+        HttpClient(CIO) {
             install("forceCache") {
                 receivePipeline.intercept(HttpReceivePipeline.Before) { response ->
                     this.proceedWith(object : HttpResponse() {
@@ -80,7 +81,10 @@ class HttpClientFactory {
                     })
                 }
             }
-            install(HttpCache)
+            install(HttpCache) {
+                val dir = File(androidContext.dataDir, "ktor-cache")
+                publicStorage(FileStorage(dir))
+            }
             install(Logging) {
                 logger = Logger.SIMPLE
                 level = LogLevel.ALL

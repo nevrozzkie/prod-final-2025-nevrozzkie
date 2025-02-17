@@ -1,14 +1,17 @@
 package main
 
+import MainRepository
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import koin.Inject
 import main.MainStore.Intent
 import main.MainStore.Label
 import main.MainStore.State
 
 class MainStoreFactory(
+    private val mainRepository: MainRepository = Inject.instance(),
     private val storeFactory: StoreFactory,
-    private val executor: MainExecutor
+    private val executor: MainExecutor,
 ) {
 
     fun create(): MainStore {
@@ -19,7 +22,9 @@ class MainStoreFactory(
         MainStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "MainStore",
-            initialState = MainStore.State(),
+            initialState = MainStore.State(
+                news = mainRepository.getNewsFlow()
+            ),
             executorFactory = ::executor,
             reducer = MainReducer
         )

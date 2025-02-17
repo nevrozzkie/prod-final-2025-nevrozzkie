@@ -5,7 +5,8 @@ import main.MainStore.Message
 import tickers.TickersStore.Intent
 import tickers.TickersStore.Label
 import tickers.TickersStore.State
-import utils.Ticker
+import Ticker
+import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 
 interface TickersStore : Store<Intent, State, Label> {
     data class State(

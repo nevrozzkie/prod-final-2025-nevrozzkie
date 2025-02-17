@@ -8,8 +8,20 @@ import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toJavaInstant
 import kotlinx.datetime.toLocalDateTime
 import java.io.ByteArrayOutputStream
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 import kotlin.math.pow
 
+// https://www.iditect.com/program-example/android--format-number-using-decimal-format-in-kotlin.html
+fun formatLikeAmount(number: Float, withSpaces: Boolean = true): String {
+    val symbols = DecimalFormatSymbols(Locale.getDefault()).apply {
+        groupingSeparator = if (withSpaces) ' ' else ','
+    }
+    val decimalFormat = DecimalFormat("#,###.##", symbols)
+    val formattedNumber = decimalFormat.format(number)
+    return formattedNumber
+}
 
 fun Float.roundTo(numFractionDigits: Int): Float {
     val divider = 10f.pow(numFractionDigits)
@@ -35,6 +47,7 @@ fun Bitmap.toByteArray(): ByteArray {
 fun LocalDate.toTimestamp(): Long {
     return this.atStartOfDayIn(TimeZone.currentSystemDefault()).toJavaInstant().toEpochMilli()
 }
+
 fun Instant.toTimestamp(): Long {
     return this.toEpochMilliseconds()
 }

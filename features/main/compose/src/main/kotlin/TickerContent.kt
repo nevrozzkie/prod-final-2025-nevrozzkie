@@ -198,7 +198,7 @@ private fun HorizontalTicker(
 
     val price = if (isConverted) ticker.rubles else ticker.price
     val currency = if (isConverted) "RUB" else ticker.currency
-    val priceText = "${price.roundTo(2)} $currency"
+    val priceText = "${formatLikeAmount(price.roundTo(2), isConverted)} $currency"
 
 
     val deltaText = buildAnnotatedString {

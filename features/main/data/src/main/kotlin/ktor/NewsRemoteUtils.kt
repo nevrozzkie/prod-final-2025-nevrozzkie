@@ -31,7 +31,8 @@ internal data class RNewsItem(
         source = source,
         geo = geo.minByOrNull { g -> g.length },
         date = date?.toTimestamp() ?: 0,
-        isImageLoading = isImageLoading
+        isImageLoading = isImageLoading,
+        imageUrl = media.maxByOrNull { it.height * it.width }?.url
     )
 }
 

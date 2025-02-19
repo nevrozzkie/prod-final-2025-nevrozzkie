@@ -41,6 +41,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import base.NetworkCrossfade
+import base.TonalCard
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import decompose.isError
 import decompose.isNotError
@@ -64,7 +65,8 @@ fun TickerContent(
         Spacer(Modifier.height(Paddings.medium))
     }
     Crossfade(
-        networkModel.isNotError, label = "tickerNetworkStateAnimation") { isNotError ->
+        networkModel.isNotError, label = "tickerNetworkStateAnimation"
+    ) { isNotError ->
         if (isNotError) {
             Column {
                 AnimatedVerticalColumn(
@@ -183,7 +185,6 @@ private fun HorizontalTicker(
 
     val isDeltaUp = ticker.percentageDelta > 0
     val isDeltaSame = ticker.percentageDelta == 0f
-    val containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
     val priceColor by animateColorAsState(
         if (isDeltaUp) themeColors.green
         else if (isDeltaSame) Color.Gray
@@ -198,7 +199,7 @@ private fun HorizontalTicker(
 
     val price = if (isConverted) ticker.rubles else ticker.price
     val currency = if (isConverted) "RUB" else ticker.currency
-    val priceText = "${formatLikeAmount(price.roundTo(2), isConverted)} $currency"
+    val priceText = "${price.roundTo(2).formatLikeAmount(isConverted)} $currency"
 
 
     val deltaText = buildAnnotatedString {
@@ -209,10 +210,7 @@ private fun HorizontalTicker(
     }
 
     val priceFontWeight = FontWeight.SemiBold
-
-    Surface(
-        shape = MaterialTheme.shapes.large,
-        color = containerColor,
+    TonalCard(
         contentColor = priceColor
     ) {
         Row(

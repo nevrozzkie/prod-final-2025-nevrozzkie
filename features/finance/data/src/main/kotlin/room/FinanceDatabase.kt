@@ -7,7 +7,7 @@ import room.goals.GoalsDao
 import room.transactions.TransactionEntity
 import room.transactions.TransactionsDao
 
-@Database(entities = [GoalEntity::class, TransactionEntity::class], version = 1)
+@Database(entities = [GoalEntity::class, TransactionEntity::class], version = 7)
 internal abstract class FinanceDatabase : RoomDatabase() {
     abstract fun goalsDao(): GoalsDao
     abstract fun transactionsDao(): TransactionsDao

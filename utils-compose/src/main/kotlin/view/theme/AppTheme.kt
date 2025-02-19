@@ -1,11 +1,13 @@
 package view.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.unit.dp
 import view.DarkThemeColors
 import view.LightThemeColors
 import view.LocalThemeColors
@@ -31,7 +33,7 @@ fun AppTheme(isDarkPriority: Boolean = false, content: @Composable () -> Unit) {
         LocalContentColor provides colorScheme.onSurface
     ) {
         MaterialTheme(
-            colorScheme = colorScheme.animated(),
+            colorScheme = colorScheme.animated()
         ) {
             content()
         }

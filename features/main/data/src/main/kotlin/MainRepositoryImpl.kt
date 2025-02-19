@@ -45,34 +45,49 @@ class MainRepositoryImpl(
     override suspend fun fetchRecentNews(mustBeFromInternet: Boolean) {
         val currentTimestamp = Clock.System.now().toTimestamp()
 
-        val cachedNews = newsFlow.firstOrNull() ?: emptyList()
+        val cachedNews = getCachedNews()
 
         val isCacheExpired = cachedNews.firstOrNull()?.let { news ->
             (currentTimestamp - news.insertInDBTimestamp) / 1000 > CacheLocalSeconds.News.RECENT_NEWS
         } ?: true
-
+        println("TAKS")
         if (mustBeFromInternet || isCacheExpired) {
             val responseNews = remoteDataSource.fetchRecentNewsData()
                 .news
                 // it has to be published
                 .filter { it.date != null }
             refreshNews(responseNews, cachedNews)
-        }
-    }
-
-
-    private suspend fun refreshNews(responseNews: List<RNewsItem>, cachedNews: List<NewsEntity>) {
-        // without images or with cached images
-        localDataSource.refreshWithoutImages(responseNews, cachedNews)
-
-        // fetch actual images
-        responseNews.forEach { rNewsItem ->
-            val imageUrl = rNewsItem.media.maxByOrNull { it.height * it.width }?.url
-            val imageByteArray = imageUrl?.let { remoteDataSource.fetchNewsImageByteArray(it) }
-            localDataSource.updateForImage(rNewsItem, imageByteArray)
+        } else {
+            println("ELSE GO ${cachedNews}")
+            println("ELSE GO1 ${cachedNews.filter { it.isImageLoading || it.imageByteArray == null }}")
+            cachedNews.filter { it.isImageLoading || it.imageByteArray == null }
+                .forEach { entity ->
+                    loadImageAndUpdate(entity)
+                }
         }
     }
 
     override fun getNewsFlow(): Flow<List<NewsItem>> = newsFlow.mapToNewsItems()
+
+    private suspend fun getCachedNews(): List<NewsEntity> = (newsFlow.firstOrNull() ?: emptyList())
+
+    private suspend fun refreshNews(
+        responseNews: List<RNewsItem>,
+        oldCachedNews: List<NewsEntity>
+    ) {
+        // without images or with old cached images
+        val newCachedNews = localDataSource.refreshWithoutImages(responseNews, oldCachedNews)
+
+        // fetch actual images for newCache
+        newCachedNews.forEach { entity ->
+            loadImageAndUpdate(entity)
+        }
+    }
+
+    private suspend fun loadImageAndUpdate(entity: NewsEntity) {
+        val imageByteArray = entity.imageUrl?.let { remoteDataSource.fetchNewsImageByteArray(it) }
+
+        localDataSource.updateForImage(entity, imageByteArray)
+    }
 
 }

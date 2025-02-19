@@ -1,11 +1,14 @@
 package finance
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.childContext
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import decompose.DefaultMVIComponent
 import decompose.NetworkStateManager
+import goals.GoalsComponent
+import transactions.TransactionsComponent
 
 class FinanceComponent(
     componentContext: ComponentContext,
@@ -21,5 +24,14 @@ class FinanceComponent(
         get() = instanceKeeper.getStore() {
             factory.create()
         }
+
+    val goalsComponent = GoalsComponent(
+        componentContext = childContext("goals"),
+        storeFactory = storeFactory
+    )
+    val transactionsComponent = TransactionsComponent(
+        componentContext = childContext("transactions"),
+        storeFactory = storeFactory
+    )
 
 }

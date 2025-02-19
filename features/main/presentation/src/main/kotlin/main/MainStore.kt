@@ -15,9 +15,10 @@ import main.MainStore.Label
 import main.MainStore.State
 
 interface MainStore : Store<Intent, State, Label> {
-    data class State(
+    data class Flows(
         val newsFlow: Flow<List<NewsItem>> = Inject.instance<MainRepository>().getNewsFlow()
     )
+    data object State
 
     sealed interface Intent {
         data object OnInit : Intent

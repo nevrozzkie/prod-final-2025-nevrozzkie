@@ -4,17 +4,16 @@ package room.goals
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface GoalsDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGoal(goalEntity: GoalEntity)
-
-    @Update
-    suspend fun updateGoal(goalEntity: GoalEntity)
 
     @Delete
     suspend fun deleteGoal(goalEntity: GoalEntity)

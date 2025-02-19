@@ -1,5 +1,6 @@
 package view.theme
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.unit.dp
 
 data object Paddings {
@@ -12,4 +13,6 @@ data object Paddings {
     val small = 7.5.dp
 
     val bottomScrollPadding = 120.dp
+
+    val buttonPaddingValues = PaddingValues(vertical = small, horizontal = medium)
 }

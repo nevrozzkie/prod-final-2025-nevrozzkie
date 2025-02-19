@@ -21,7 +21,7 @@ class MainStoreFactory(
         MainStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "MainStore",
-            initialState = MainStore.State(),
+            initialState = MainStore.State,
             executorFactory = ::executor,
             reducer = { _ -> this} //MainReducer
         )

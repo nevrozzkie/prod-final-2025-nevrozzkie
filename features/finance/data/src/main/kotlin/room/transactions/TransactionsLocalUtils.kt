@@ -18,16 +18,18 @@ internal data class TransactionEntity(
 ) {
     fun toTransaction() = Transaction(
         id = id,
-        goalId = goalId,
+        fromGoalId = null,
+        toGoalId = goalId,
         amount = amount,
         comment = comment,
-        createdDate = createdDate
+        createdDate = createdDate,
+        isEditing = false
     )
 }
 
 internal fun Transaction.toEntity() = TransactionEntity(
     id = id,
-    goalId = goalId,
+    goalId = toGoalId,
     amount = amount,
     comment = comment,
     createdDate = createdDate

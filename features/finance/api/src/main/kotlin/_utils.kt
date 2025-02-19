@@ -1,3 +1,5 @@
+import kotlinx.datetime.LocalDate
+
 //@PrimaryKey val id: Long,
 //val name: String,
 //@ColumnInfo(name = "target_amount") val targetAmount: Long,
@@ -8,14 +10,17 @@ data class Goal(
     val id: Long,
     val name: String,
     val targetAmount: Long,
-    val createdDate: String,
-    val plannedDate: String,
-    val completedDate: String?
+    val createdDate: LocalDate,
+    val plannedDate: LocalDate?,
+    val completedDate: LocalDate?,
+    val isEditing: Boolean
 )
 data class Transaction(
     val id: Long,
-    val goalId: Long,
+    val fromGoalId: Long?,
+    val toGoalId: Long,
     val amount: Long,
     val comment: String,
-    val createdDate: String
+    val createdDate: String,
+    val isEditing: Boolean
 )

@@ -52,6 +52,7 @@ suspend fun HttpClient.dGet(
     }
     return response
 }
+
 // DefaultGet
 suspend fun HttpClient.dGet(
     url: Url,
@@ -68,7 +69,7 @@ suspend fun HttpClient.dGet(
     return response
 }
 
-suspend fun HttpClient.fetchByteArray(url: String, saveForSeconds: Int = 60*60): ByteArray? {
+suspend fun HttpClient.fetchByteArray(url: String, saveForSeconds: Int = 60 * 60): ByteArray? {
     return try {
         this.dGet(Url(url), saveForSeconds).readRawBytes()
     } catch (e: Throwable) {
@@ -77,7 +78,16 @@ suspend fun HttpClient.fetchByteArray(url: String, saveForSeconds: Int = 60*60):
     }
 }
 
-fun ByteArray?.toImageBitmap(): Bitmap? = this?.let {  BitmapFactory.decodeByteArray(this, 0, this.size) }
+val ByteArray?.imageBitmap: Bitmap?
+    get() = this?.let { BitmapFactory.decodeByteArray(this, 0, this.size) }
+
+// care of "Failed to create image decoder with message 'unimplemented'"
+val ByteArray?.isValid: Boolean
+    get() = this.imageBitmap != null
+
+val ByteArray?.validated: ByteArray?
+    get() = if(isValid) this else null
+
 
 // DefaultBody
 suspend inline fun <reified T> HttpResponse.dBody(): T {

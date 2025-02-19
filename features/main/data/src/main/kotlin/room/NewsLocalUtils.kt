@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
-import ktor.toImageBitmap
+import ktor.imageBitmap
 import toLocalDate
 import toTimestamp
 
@@ -16,6 +16,7 @@ internal data class NewsEntity(
     @PrimaryKey val id: String,
     val title: String,
     val desc: String,
+    @ColumnInfo(name = "image_url") val imageUrl: String?,
     @ColumnInfo(name = "image_byte_array") val imageByteArray: ByteArray?,
     @ColumnInfo(name = "is_image_loading") val isImageLoading: Boolean,
     val source: String,
@@ -26,7 +27,7 @@ internal data class NewsEntity(
     fun toNewsItem() = NewsItem(
         title = title,
         desc = desc,
-        imageBitmap = imageByteArray?.toImageBitmap(),
+        imageBitmap = imageByteArray?.imageBitmap,
         source = source,
         geo = geo,
         isImageLoading = isImageLoading,

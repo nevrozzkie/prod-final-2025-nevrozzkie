@@ -33,6 +33,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format
 import kotlinx.datetime.format.char
 import androidx.compose.ui.graphics.Color
+import base.TonalCard
 import view.theme.Paddings
 
 
@@ -72,8 +73,7 @@ private fun NewsItemContent(
     image?.prepareToDraw()
 
 
-    val containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-    val contentColor = MaterialTheme.colorScheme.onSurface
+
 
     val bottomInfoTextStyle = MaterialTheme.typography.bodySmall.copy(
         color = MaterialTheme.colorScheme.onSurface.copy(alpha = .5f)
@@ -86,13 +86,10 @@ private fun NewsItemContent(
     )
 
     Spacer(Modifier.height(Paddings.large))
-    Surface(
-        shape = MaterialTheme.shapes.large,
-        contentColor = contentColor,
+    TonalCard (
         modifier = Modifier.padding(
             horizontal = Paddings.hMainContainer
-        ),
-        color = containerColor
+        )
     ) {
         Column(Modifier.padding(Paddings.medium)) {
             Crossfade(newsItem.isImageLoading, label = "imageNewsItemAnimation") { isImageLoading ->
@@ -141,15 +138,7 @@ private fun NewsItemContent(
                         }
                     )
                     Text(
-                        newsItem.date.format(
-                            LocalDate.Format {
-                                dayOfMonth()
-                                char('.')
-                                monthNumber()
-                                char('.')
-                                year()
-                            }
-                        )
+                        newsItem.date.format(rusFormat)
                     )
                 }
             }

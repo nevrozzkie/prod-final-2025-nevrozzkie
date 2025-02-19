@@ -44,9 +44,9 @@ class RoomFinanceLocalDataSource(
     }
 
     internal suspend fun updateTransaction(transaction: Transaction) {
-        withDatabaseContext {
-            transactionsDao.updateTransaction(transaction.toEntity())
-        }
+//        withDatabaseContext {
+//            transactionsDao.updateTransaction(transaction.toEntity())
+//        }
     }
 
     internal suspend fun deleteTransaction(transaction: Transaction) {
@@ -65,9 +65,9 @@ class RoomFinanceLocalDataSource(
         }
     }
     internal suspend fun updateGoal(goal: Goal) {
-        withDatabaseContext {
-            goalsDao.updateGoal(goal.toEntity())
-        }
+//        withDatabaseContext {
+//            goalsDao.updateGoal(goal.toEntity())
+//        }
     }
     internal suspend fun deleteGoal(goal: Goal) {
         withDatabaseContext {

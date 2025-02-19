@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import kotlinx.coroutines.flow.Flow
 import ktor.RNewsItem
+import ktor.isValid
+import ktor.validated
 import withDatabaseContext
 
 internal object MainDatabaseNames {
@@ -27,7 +29,7 @@ class RoomMainLocalDataSource(
         newsDao = db.newsDao()
     }
 
-    internal suspend fun refreshWithoutImages(responseNews: List<RNewsItem>, cachedNews: List<NewsEntity>) {
+    internal suspend fun refreshWithoutImages(responseNews: List<RNewsItem>, cachedNews: List<NewsEntity>): List<NewsEntity> {
         val entitiesWithoutImage = responseNews.map { rNewsItem ->
             // if we already cached image -> it won't be null
             val cachedImage = cachedNews
@@ -41,13 +43,13 @@ class RoomMainLocalDataSource(
         withDatabaseContext {
             newsDao.refreshNews(entitiesWithoutImage)
         }
+        return entitiesWithoutImage
     }
 
-    internal suspend fun updateForImage(newsItem: RNewsItem, imageByteArray: ByteArray?) {
+    internal suspend fun updateForImage(newsEntity: NewsEntity, imageByteArray: ByteArray?) {
         withDatabaseContext {
-            val entity = newsItem.toEntity(
-                id = newsItem.id,
-                imageByteArray = imageByteArray,
+            val entity = newsEntity.copy(
+                imageByteArray = imageByteArray.validated,
                 isImageLoading = false
             )
             newsDao.updateNewsEntity(entity)

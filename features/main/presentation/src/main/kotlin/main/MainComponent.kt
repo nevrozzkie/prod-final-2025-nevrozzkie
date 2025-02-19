@@ -34,6 +34,10 @@ class MainComponent(
             ).create()
         }
 
+    val flows = MainStore.Flows()
+
+
+
     val tickersComponent = TickersComponent(
         childContext("tickers"),
         storeFactory = storeFactory

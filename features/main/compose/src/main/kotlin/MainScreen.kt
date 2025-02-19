@@ -32,8 +32,7 @@ fun MainScreen(
 private fun MainContent(
     component: MainComponent
 ) {
-    val model by component.model.subscribeAsState()
-    val newsItems by model.newsFlow.collectAsState(initial = listOf())
+    val newsItems by component.flows.newsFlow.collectAsState(initial = listOf())
     val networkModel by component.networkStateManager.networkModel.subscribeAsState()
 
     val tickersComponent = component.tickersComponent

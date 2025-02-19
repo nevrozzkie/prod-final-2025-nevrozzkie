@@ -54,7 +54,7 @@ class KtorMainRemoteDataSource(
     }
 
     internal suspend fun fetchTickerLogoBitmap(url: String): Bitmap? =
-        hcStock.fetchByteArray(url, HttpConstants.CacheSeconds.IMAGE)?.toImageBitmap()
+        hcStock.fetchByteArray(url, HttpConstants.CacheSeconds.IMAGE)?.imageBitmap
 
     internal suspend fun fetchNewsImageByteArray(url: String): ByteArray? =
         hcNews.fetchByteArray(url, HttpConstants.CacheSeconds.News.RECENT_NEWS_IMAGE)

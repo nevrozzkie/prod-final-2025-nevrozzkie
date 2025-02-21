@@ -63,6 +63,7 @@ fun SocialFeedScreen(component: SocialFeedComponent) {
             items(model.posts.reversed(), key = { "feedItemN${it.id}" }) { item ->
                 Spacer(Modifier.height(Paddings.semiLarge))
                 SocialFeedItemContent(
+                    id = item.id,
                     images = item.images.mapNotNull { it.bitmap?.asImageBitmap() },
                     text = item.text,
                     tags = item.tags,
@@ -71,7 +72,8 @@ fun SocialFeedScreen(component: SocialFeedComponent) {
                     allTags = allPostsTags,
                     date = item.creationDate,
                     time = item.creationTime,
-                    isEdited = item.edited
+                    isEdited = item.edited,
+                    isFavourite = item.isFavourite
                 )
             }
         }

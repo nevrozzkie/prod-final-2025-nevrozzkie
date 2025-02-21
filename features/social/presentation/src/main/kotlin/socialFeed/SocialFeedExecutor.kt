@@ -1,7 +1,6 @@
 package socialFeed
 
 import SocialRepository
-import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import decompose.DefaultCoroutineExecutor
 import koin.Inject
 import kotlinx.coroutines.flow.collectLatest
@@ -21,7 +20,17 @@ class SocialFeedExecutor(
 
     override fun executeIntent(intent: Intent) {
         when (intent) {
-            else -> TODO()
+            is Intent.ClickOnFavouriteButton -> setFavourite(intent.id)
+        }
+    }
+
+    private fun setFavourite(id: Long) {
+        scope.launch {
+            if (state().posts.firstOrNull { it.id == id }?.isFavourite == true) {
+                socialRepository.deleteFavourite(id)
+            } else {
+                socialRepository.saveFavourite(id)
+            }
         }
     }
 

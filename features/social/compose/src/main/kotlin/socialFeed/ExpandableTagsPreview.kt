@@ -53,9 +53,10 @@ fun ExpandableTagsPreview(
             Row(
                 Modifier
                     .padding(end = Paddings.semiMedium)
+                    .clip(MaterialTheme.shapes.large)
                     .clickable {
                         isExpandedTags = true
-                    }.clip(MaterialTheme.shapes.large),
+                    },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(
                     Paddings.semiMedium,

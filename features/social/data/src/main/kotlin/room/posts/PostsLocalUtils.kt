@@ -40,7 +40,7 @@ internal data class PostEntityWithImages(
     )
     val images: List<PostImageEntity>
 ) {
-    fun toPost() = run {
+    fun toPost(isFavourite: Boolean) = run {
         val creationDateTime = post.creationTimestamp.toLocalDateTime()
         println("MEOWxx: ${post.creationTimestamp} ${post.editTimestamp}")
         Post(
@@ -58,7 +58,8 @@ internal data class PostEntityWithImages(
                     title = post.newsTitle!!
                 )
             },
-            creationDate = creationDateTime.date.format(rusFormat)
+            creationDate = creationDateTime.date.format(rusFormat),
+            isFavourite = isFavourite
 
         )
     }

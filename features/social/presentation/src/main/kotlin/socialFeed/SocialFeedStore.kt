@@ -2,7 +2,6 @@ package socialFeed
 
 import Post
 import com.arkivanov.mvikotlin.core.store.Store
-import managePost.ManagePostStore
 import socialFeed.SocialFeedStore.Intent
 import socialFeed.SocialFeedStore.Label
 import socialFeed.SocialFeedStore.State
@@ -12,7 +11,9 @@ interface SocialFeedStore : Store<Intent, State, Label> {
         val posts: List<Post> = emptyList()
     )
 
-    sealed interface Intent
+    sealed interface Intent {
+        data class ClickOnFavouriteButton(val id: Long) : Intent
+    }
 
     sealed interface Message {
         data class PostsUpdated(val posts: List<Post>) : Message

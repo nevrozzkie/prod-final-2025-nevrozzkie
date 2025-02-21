@@ -4,15 +4,19 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -22,6 +26,7 @@ import androidx.compose.ui.text.withStyle
 
 @Composable
 fun ExpandableTextWithCustomOverflow(
+    isExpanded: MutableState<Boolean>,
     text: String,
     maxLines: Int = 3,
     modifier: Modifier = Modifier,
@@ -30,11 +35,8 @@ fun ExpandableTextWithCustomOverflow(
     overflowIndicator: String = "  ещё",
     overflowColor: Color = MaterialTheme.colorScheme.tertiary
 ) {
-
-    var isExpanded by remember { mutableStateOf(false) }
-
     AnimatedContent(
-        isExpanded,
+        isExpanded.value,
         transitionSpec = { fadeIn(animationSpec = tween(250))
             .togetherWith(fadeOut(animationSpec = tween(250))) },
         label = "ExpandableTextWithCustomOverflowAnimation"
@@ -64,10 +66,12 @@ fun ExpandableTextWithCustomOverflow(
             },
             fontWeight = fontWeight,
             softWrap = true,
-            modifier = modifier.clickable(interactionSource = null, indication = null) {
-                isExpanded = !isExpanded
-            }
+            modifier = modifier
         )
     }
+
+    //clickable(interactionSource = null, indication = null) {
+    //                isExpanded = !isExpanded
+    //            }
 
 }

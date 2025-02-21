@@ -24,4 +24,4 @@ internal data class PostImageEntity(
     @PrimaryKey(autoGenerate = true) @ColumnInfo("image_id") val imageId: Long = 0L,
     @ColumnInfo("post_id") val postId: Long,
     @ColumnInfo("image_data") val imageData: ByteArray
-    )
+)

@@ -10,11 +10,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.DpOffset
 
 @Composable
 fun DropdownMenuOnLongPressContainer(
     isEnabled: Boolean,
+    onTap: (Offset) -> Unit = {},
     dropdownContent: @Composable (MutableState<Boolean>) -> Unit,
     content: @Composable BoxScope.() -> Unit
 ) {
@@ -33,7 +35,8 @@ fun DropdownMenuOnLongPressContainer(
             onLongPress = {
                 offset.value = it
                 isDropdownExpanded.value = true
-            }
+            },
+            onTap = onTap
         ) {
             content()
         }

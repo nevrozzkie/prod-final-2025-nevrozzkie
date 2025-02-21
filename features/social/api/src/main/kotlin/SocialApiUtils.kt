@@ -9,7 +9,8 @@ data class Post(
     val creationDate: String,
     val creationTime: String,
     val edited: Boolean,
-    val newsData: PostNewsData?
+    val newsData: PostNewsData?,
+    val isFavourite: Boolean
 )
 
 @Serializable

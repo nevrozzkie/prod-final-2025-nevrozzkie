@@ -15,6 +15,9 @@ class TickersExecutor(
     private val mainRepository: MainRepository = Inject.instance(),
     private val networkStateManager: NetworkStateManager
 ) : DefaultCoroutineExecutor<Intent, Unit, State, Message, Label>() {
+    override fun executeAction(action: Unit) {
+        if(state().mainTickers.isEmpty()) fetchMainTickers()
+    }
     override fun executeIntent(intent: Intent) {
         when (intent) {
             Intent.FetchMainTickers -> fetchMainTickers()

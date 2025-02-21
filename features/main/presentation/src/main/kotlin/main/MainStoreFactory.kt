@@ -1,6 +1,7 @@
 package main
 
 import MainRepository
+import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import koin.Inject
@@ -21,8 +22,9 @@ class MainStoreFactory(
         MainStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "MainStore",
-            initialState = MainStore.State,
+            initialState = MainStore.State(),
             executorFactory = ::executor,
-            reducer = { _ -> this} //MainReducer
+            reducer = MainReducer,
+            bootstrapper = SimpleBootstrapper(Unit)
         )
 }

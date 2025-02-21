@@ -18,7 +18,8 @@ import tickers.TickersStore
 class MainComponent(
     componentContext: ComponentContext,
     private val storeFactory: StoreFactory,
-    override val instanceKeeper: InstanceKeeper
+    override val instanceKeeper: InstanceKeeper,
+    private val output: (Output) -> Unit
 ) : ComponentContext by componentContext,
     DefaultMVIComponent<MainStore.Intent, MainStore.State, MainStore.Label> {
 
@@ -34,8 +35,6 @@ class MainComponent(
             ).create()
         }
 
-    val flows = MainStore.Flows()
-
 
 
     val tickersComponent = TickersComponent(
@@ -43,9 +42,17 @@ class MainComponent(
         storeFactory = storeFactory
     )
 
-    init {
-        tickersComponent.onEvent(TickersStore.Intent.FetchMainTickers)
-        onEvent(MainStore.Intent.OnInit)
+    fun onOutput(output: Output) {
+        output(output)
+    }
+
+    sealed class Output {
+        data class NavigateToNewsSite(
+            val url: String,
+            val id: String,
+            val title: String,
+            val image: ByteArray?
+        ) : Output()
     }
 
 }

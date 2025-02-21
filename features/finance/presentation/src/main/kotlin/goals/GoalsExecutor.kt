@@ -8,15 +8,22 @@ import goals.GoalsStore.Intent
 import goals.GoalsStore.Label
 import goals.GoalsStore.State
 import goals.GoalsStore.Message
-import koin.Inject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.datetime.format
 import parseToLocalDateSafely
 import rusFormat
 
 class GoalsExecutor(
-    val financeRepository: FinanceRepository = Inject.instance()
+    private val financeRepository: FinanceRepository,
+    private val goalsFlow: Flow<List<Goal>>
+
 ) : DefaultCoroutineExecutor<Intent, Unit, State, Message, Label>() {
+    override fun executeAction(action: Unit) {
+        updateMaxId()
+    }
+
     override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.ChangeEditGoalAmount -> editGoalAmount(intent.amount)
@@ -35,12 +42,20 @@ class GoalsExecutor(
         }
     }
 
+    private fun updateMaxId() {
+        scope.launch {
+            goalsFlow.collectLatest { goals ->
+                dispatch(Message.MaxIdChanged(goals.maxOfOrNull { it.id } ?: 0L))
+            }
+        }
+    }
+
     private fun createOrEdit() {
         if (state().isEditingGoalAmountValid && state().isEditingGoalPlannedDateValid && state().isEditingGoalNameValid) {
             scope.launch {
                 state().editingGoal?.let { goal ->
                     dispatch(Message.EditingGoalChanged(null))
-                    financeRepository.insertGoal(
+                    financeRepository.upsertGoal(
                         goal.copy(
                             plannedDate = state().editingGoalPlannedDate.parseToLocalDateSafely(
                                 rusFormat
@@ -62,7 +77,8 @@ class GoalsExecutor(
                     createdDate = this.createdDate ?: state().today,
                     plannedDate = null,
                     completedDate = null,
-                    isEditing = true
+                    isEditing = true,
+                    savedAmount = 0
                 )
             )
         )
@@ -71,6 +87,7 @@ class GoalsExecutor(
                 this.plannedDate?.format(rusFormat) ?: ""
             )
         )
+        publish(Label.ScrollToCreatedGoal)
     }
 
     private fun editGoalDate(date: String) {
@@ -87,22 +104,13 @@ class GoalsExecutor(
     }
 
     private fun editGoalAmount(notFormattedText: String) {
-        val amountText = notFormattedText.replace(Regex("\\D"), "")
-        if (amountText.length <= 999_999_999_999.toString().length) {
-            val amount = if (amountText.isEmpty()) {
-                0
-            } else {
-                amountText.toLongOrNull()
-            }
-            amount?.let {
-                if (amount >= 0) {
-                    dispatch(
-                        Message.EditingGoalChanged(
-                            state().editingGoal?.copy(targetAmount = amount)
-                        )
-                    )
-                }
-            }
+        val regex = Regex("\\d{0,12}$")
+        if (notFormattedText.matches(regex) || notFormattedText.isEmpty()) {
+            dispatch(
+                GoalsStore.Message.EditingGoalChanged(
+                    state().editingGoal?.copy(targetAmount = notFormattedText.toLongOrNull() ?: 0)
+                )
+            )
         }
     }
 }

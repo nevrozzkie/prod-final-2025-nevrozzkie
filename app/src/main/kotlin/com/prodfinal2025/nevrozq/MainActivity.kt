@@ -6,33 +6,28 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.defaultComponentContext
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.prodfinal2025.nevrozq.navigation.root.RootComponentImpl
-import com.prodfinal2025.nevrozq.navigation.root.RootContent
+import com.prodfinal2025.nevrozq.navigation.root.RootFlowScreen
 import coreModule
 import financeModule
 import mainModule
 import koin.Inject
-import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
-import org.koin.dsl.koinApplication
+import socialModule
 import view.theme.AppTheme
 import view.LocalViewManager
 import view.ThemeTint
@@ -43,6 +38,7 @@ class MainActivity : ComponentActivity() {
         stopKoin()
         super.finish()
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -52,12 +48,13 @@ class MainActivity : ComponentActivity() {
             modules(
                 coreModule,
                 mainModule,
-                financeModule
+                financeModule,
+                socialModule
             )
         }
         enableEdgeToEdge()
         val prefs: SharedPreferences = Inject.instance()
-        val viewManager = getViewManager("Dark")
+        val viewManager = getViewManager("Auto")
 
         val rootComponent = RootComponentImpl(
             componentContext = defaultComponentContext(),
@@ -70,22 +67,24 @@ class MainActivity : ComponentActivity() {
                 LocalViewManager provides viewManager
             ) {
                 AppTheme {
-                    Box(Modifier.fillMaxSize()) {
-                        Surface(color = MaterialTheme.colorScheme.background) {
-                            RootContent(rootComponent)
-                        }
-
-                        Button(
-                            modifier = Modifier.align(Alignment.CenterStart).safeContentPadding(),
-                            onClick = {
-                                viewManager.tint.value =
-                                    if (viewManager.isDark.value)  ThemeTint.Light
-                                    else ThemeTint.Dark
-                            }
-                        ) {
-                            Text("Change Theme")
-                        }
+//                    Box() {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        RootFlowScreen(rootComponent)
                     }
+
+//                    Button(
+//                        modifier = Modifier.safeContentPadding(),
+//                        onClick = {
+//                            viewManager.tint.value =
+//                                if (viewManager.isDark.value) ThemeTint.Light
+//                                else ThemeTint.Dark
+//                        }
+//                    ) {
+//                        Text("Change Theme")
+//                    }
                 }
             }
         }
@@ -114,6 +113,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
 //    IndividualProdTheme {
-        Greeting("Android")
+    Greeting("Android")
 //    }
 }

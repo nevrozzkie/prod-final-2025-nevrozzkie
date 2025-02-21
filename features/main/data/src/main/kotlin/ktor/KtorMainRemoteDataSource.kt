@@ -2,6 +2,7 @@ package ktor
 
 import HttpConstants
 import android.graphics.Bitmap
+import bitmap
 import io.ktor.client.HttpClient
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.parameter
@@ -54,7 +55,7 @@ class KtorMainRemoteDataSource(
     }
 
     internal suspend fun fetchTickerLogoBitmap(url: String): Bitmap? =
-        hcStock.fetchByteArray(url, HttpConstants.CacheSeconds.IMAGE)?.imageBitmap
+        hcStock.fetchByteArray(url, HttpConstants.CacheSeconds.IMAGE)?.bitmap
 
     internal suspend fun fetchNewsImageByteArray(url: String): ByteArray? =
         hcNews.fetchByteArray(url, HttpConstants.CacheSeconds.News.RECENT_NEWS_IMAGE)

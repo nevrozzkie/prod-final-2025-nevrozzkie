@@ -45,8 +45,8 @@ dependencies {
     implementation(project(":features:main:data"))
     implementation(project(":features:finance:compose"))
     implementation(project(":features:finance:data"))
-    implementation(project(":features:social-feed:compose"))
-    implementation(project(":features:social-feed:data"))
+    implementation(project(":features:social:compose"))
+    implementation(project(":features:social:data"))
 
     implementation(libs.decompose.compose)
 

@@ -6,22 +6,13 @@ import getCurrentLocalDateTime
 import goals.GoalsStore.Intent
 import goals.GoalsStore.Label
 import goals.GoalsStore.State
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.datetime.LocalDate
 
 interface GoalsStore : Store<Intent, State, Label> {
-
-    // Цветочки, но в душе coroutines...
-    data class Flowers(
-        val activeGoals: Flow<List<Goal>>,
-        val completedGoals: Flow<List<Goal>>,
-        val maxId: Flow<Long> = combine(activeGoals, completedGoals) { active, completed ->
-            (active + completed).maxOfOrNull { it.id } ?: 0L
-        },
-    )
-
     data class State(
+        val maxId: Long = 0L,
+
+
         val editingGoal: Goal? = null,
 
         val isEditingGoalNameValid: Boolean = false,
@@ -33,7 +24,6 @@ interface GoalsStore : Store<Intent, State, Label> {
         val isPlannedDatePickerShowing: Boolean = false,
 
         val today: LocalDate = getCurrentLocalDateTime().date
-
     )
 
     sealed interface Intent {
@@ -49,6 +39,7 @@ interface GoalsStore : Store<Intent, State, Label> {
             val createdDate: LocalDate?,
             val plannedDate: LocalDate?,
         ) : Intent
+
         data class ChangeEditGoalName(val name: String) : Intent
         data class ChangeEditGoalAmount(val amount: String) : Intent
         data class ChangeEditGoalDate(val date: String) : Intent
@@ -62,8 +53,13 @@ interface GoalsStore : Store<Intent, State, Label> {
         data class PlannedDatePickerShowingChanged(val isShowing: Boolean) : Message
         data class EditingGoalPlannedDateChanged(val date: String) : Message
 
+        data class MaxIdChanged(
+            val maxId: Long
+        ) : Message
     }
 
-    sealed interface Label
+    sealed interface Label {
+        data object ScrollToCreatedGoal : Label
+    }
 
 }

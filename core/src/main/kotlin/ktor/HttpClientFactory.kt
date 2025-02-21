@@ -106,7 +106,7 @@ class HttpClientFactory {
 
                     protocol = URLProtocol.HTTPS
                 }
-                contentType(ContentType.Application.Json)
+//                contentType(ContentType.Application.Json)
                 port = 443
                 defaultRequestBlock?.let { it() }
             }

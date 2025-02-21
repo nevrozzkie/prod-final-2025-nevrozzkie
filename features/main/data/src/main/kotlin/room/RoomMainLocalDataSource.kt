@@ -4,8 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import kotlinx.coroutines.flow.Flow
 import ktor.RNewsItem
-import ktor.isValid
-import ktor.validated
+import validated
 import withDatabaseContext
 
 internal object MainDatabaseNames {

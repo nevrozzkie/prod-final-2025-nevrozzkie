@@ -8,6 +8,7 @@ object TransactionsReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
             is Message.EditingTransactionChanged -> copy(editingTransaction = msg.transaction)
+            is Message.MaxIdChanged -> copy(maxId = msg.maxId)
         }
     }
 }

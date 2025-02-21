@@ -1,5 +1,6 @@
 package tickers
 
+import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import tickers.TickersStore.Intent
@@ -21,6 +22,7 @@ class TickersStoreFactory(
             name = "TickersStore",
             initialState = State(),
             executorFactory = ::executor,
-            reducer = TickersReducer
+            reducer = TickersReducer,
+            bootstrapper = SimpleBootstrapper(Unit)
         )
 }

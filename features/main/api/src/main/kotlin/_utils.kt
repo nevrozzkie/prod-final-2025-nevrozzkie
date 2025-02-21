@@ -3,6 +3,7 @@ import kotlinx.datetime.LocalDate
 
 data class NewsItem(
     val id: String,
+    val url: String,
     val title: String,
     val desc: String,
     val imageBitmap: Bitmap?,

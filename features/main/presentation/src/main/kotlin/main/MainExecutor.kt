@@ -4,6 +4,7 @@ import MainRepository
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import decompose.NetworkStateManager
 import koin.Inject
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import main.MainStore.Intent
 import main.MainStore.Label
@@ -14,9 +15,19 @@ class MainExecutor(
     private val mainRepository: MainRepository = Inject.instance(),
     private val networkStateManager: NetworkStateManager
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
+    override fun executeAction(action: Unit) {
+        getNewsFromDb()
+        fetchRecentNews(false)
+    }
     override fun executeIntent(intent: Intent) {
-        when (intent) {
-            Intent.OnInit -> fetchRecentNews(false)
+
+    }
+
+    private fun getNewsFromDb() {
+        scope.launch {
+            mainRepository.getNewsFlow().collectLatest { news ->
+                dispatch(Message.NewsGot(news = news))
+            }
         }
     }
 
@@ -25,7 +36,7 @@ class MainExecutor(
             try {
                 networkStateManager.nStartLoading()
                 mainRepository.fetchRecentNews(mustBeFromInternet)
-//                dispatch(Message.NewsFetched(news))
+//                dispatch(Message.NewsGot(news))
                 networkStateManager.nSuccess()
             } catch (e: Throwable) {
                 networkStateManager.nError(

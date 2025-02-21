@@ -2,26 +2,25 @@ package room.transactions
 
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface TransactionsDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTransaction(transactionEntity: TransactionEntity)
-//
+    @Upsert
+    suspend fun upsertTransaction(transactionEntity: TransactionEntity): Long
+
     @Delete
     suspend fun deleteTransaction(transactionEntity: TransactionEntity)
 
-    @Query("SELECT * FROM transactions_table WHERE ((:goalsIds) IS NULL OR goal_id IN (:goalsIds))")
-     fun getTransactionEntitiesInternal(goalsIds: List<Long>?) : Flow<List<TransactionEntity>>
+    @Query("""
+        SELECT t.*, g.name AS goal_name
+        FROM transactions_table t
+        LEFT JOIN goals_table g ON t.goal_id = g.id
+    """)
+    fun getTransactionEntities() : Flow<List<TransactionEntityWithGoal>>
 
-    fun getTransactionEntities(goalsIds: List<Long>) : Flow<List<TransactionEntity>> {
-        return if (goalsIds.isEmpty()) {
-            getTransactionEntitiesInternal(null)
-        } else getTransactionEntitiesInternal(goalsIds)
-    }
+//    @Query("SELECT MAX(id) FROM transactions_table")
+//    fun getMaxId(): Long
 }

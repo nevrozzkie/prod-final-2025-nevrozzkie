@@ -5,12 +5,12 @@ import Transaction
 import android.content.Context
 import androidx.room.Room
 import kotlinx.coroutines.flow.Flow
+import room.goals.GoalEntityWithSavedAmount
 import room.goals.GoalsDao
-import room.goals.mapToGoals
 import room.goals.toEntity
+import room.transactions.TransactionEntityWithGoal
 import room.transactions.TransactionsDao
-import room.transactions.mapToTransactions
-import room.transactions.toEntity
+import room.transactions.toEntities
 import withDatabaseContext
 
 internal data object FinanceDatabaseNames {
@@ -37,45 +37,39 @@ class RoomFinanceLocalDataSource(
         transactionsDao = db.transactionsDao()
     }
 
-    internal suspend fun insertTransaction(transaction: Transaction) {
+    internal suspend fun upsertTransaction(transaction: Transaction) {
         withDatabaseContext {
-            transactionsDao.insertTransaction(transaction.toEntity())
-        }
-    }
 
-    internal suspend fun updateTransaction(transaction: Transaction) {
-//        withDatabaseContext {
-//            transactionsDao.updateTransaction(transaction.toEntity())
-//        }
+            val entities = transaction.toEntities()
+            entities.forEach {
+                transactionsDao.upsertTransaction(it)
+            }
+        }
     }
 
     internal suspend fun deleteTransaction(transaction: Transaction) {
         withDatabaseContext {
-            transactionsDao.deleteTransaction(transaction.toEntity())
+            transaction.toEntities().forEach {
+                transactionsDao.deleteTransaction(it)
+            }
         }
     }
 
-    internal fun getTransactions(goalsIds: List<Long>): Flow<List<Transaction>>
-        = transactionsDao.getTransactionEntities(goalsIds).mapToTransactions()
+    internal fun getTransactions(): Flow<List<TransactionEntityWithGoal>>
+        = transactionsDao.getTransactionEntities()
 
     // Goals
-    internal suspend fun insertGoal(goal: Goal) {
+    internal suspend fun upsertGoal(goal: Goal) {
         withDatabaseContext {
-            goalsDao.insertGoal(goal.toEntity())
+            goalsDao.upsertGoal(goal.toEntity())
         }
-    }
-    internal suspend fun updateGoal(goal: Goal) {
-//        withDatabaseContext {
-//            goalsDao.updateGoal(goal.toEntity())
-//        }
     }
     internal suspend fun deleteGoal(goal: Goal) {
         withDatabaseContext {
             goalsDao.deleteGoal(goal.toEntity())
         }
     }
-    internal fun getActualGoals(): Flow<List<Goal>> = goalsDao.getActualGoalEntities().mapToGoals()
-    internal fun getCompletedGoals(): Flow<List<Goal>> = goalsDao.getCompletedGoalEntities().mapToGoals()
+    internal fun getGoalsWithSavedAmountEntities(): Flow<List<GoalEntityWithSavedAmount>> = goalsDao.getGoalsWithSavedAmount()
 
 
 }

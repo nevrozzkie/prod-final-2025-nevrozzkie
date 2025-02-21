@@ -18,6 +18,7 @@ internal data class RNewsItem(
     @SerialName("slug_name") val id: String,
     @SerialName("geo_facet") val geo: List<String>,
     val title: String,
+    val url: String,
     @SerialName("abstract") val desc: String,
     val source: String,
     @SerialName("published_date") val date: Instant?,
@@ -32,7 +33,8 @@ internal data class RNewsItem(
         geo = geo.minByOrNull { g -> g.length },
         date = date?.toTimestamp() ?: 0,
         isImageLoading = isImageLoading,
-        imageUrl = media.maxByOrNull { it.height * it.width }?.url
+        imageUrl = media.maxByOrNull { it.height * it.width }?.url,
+        url = url
     )
 }
 

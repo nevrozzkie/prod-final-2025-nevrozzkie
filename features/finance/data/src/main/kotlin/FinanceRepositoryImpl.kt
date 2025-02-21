@@ -1,36 +1,29 @@
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import room.RoomFinanceLocalDataSource
+import room.goals.mapToGoals
+import room.transactions.mapToTransactions
 
 class FinanceRepositoryImpl(
     private val localDataSource: RoomFinanceLocalDataSource
 ) : FinanceRepository {
-    override fun getActiveGoalsFlow(): Flow<List<Goal>> =
-        localDataSource.getActualGoals()
+    override fun getGoalsFlow(): Flow<List<Goal>> =
+        localDataSource.getGoalsWithSavedAmountEntities().mapToGoals()
 
-    override fun getCompletedGoalsFlow(): Flow<List<Goal>> =
-        localDataSource.getCompletedGoals()
 
-    override suspend fun insertGoal(goal: Goal) {
-        localDataSource.insertGoal(goal)
-    }
-
-    override suspend fun updateGoal(goal: Goal) {
-        localDataSource.updateGoal(goal)
+    override suspend fun upsertGoal(goal: Goal) {
+        localDataSource.upsertGoal(goal)
     }
 
     override suspend fun deleteGoal(goal: Goal) {
         localDataSource.deleteGoal(goal)
     }
 
-    override fun getTransactionsFlow(goalsIds: List<Long>): Flow<List<Transaction>> =
-        localDataSource.getTransactions(goalsIds)
+    override fun getTransactionsFlow(): Flow<List<Transaction>> =
+        localDataSource.getTransactions().mapToTransactions()
 
-    override suspend fun insertTransaction(transaction: Transaction) {
-        localDataSource.insertTransaction(transaction)
-    }
-
-    override suspend fun updateTransaction(transaction: Transaction) {
-        localDataSource.updateTransaction(transaction)
+    override suspend fun upsertTransaction(transaction: Transaction) {
+        localDataSource.upsertTransaction(transaction)
     }
 
     override suspend fun deleteTransaction(transaction: Transaction) {

@@ -6,21 +6,22 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface GoalsDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertGoal(goalEntity: GoalEntity)
+    @Upsert
+    suspend fun upsertGoal(goalEntity: GoalEntity)
 
     @Delete
     suspend fun deleteGoal(goalEntity: GoalEntity)
 
-    @Query("SELECT * FROM goals_table WHERE completed_date is null")
-    fun getActualGoalEntities() : Flow<List<GoalEntity>>
-
-    @Query("SELECT * FROM goals_table WHERE completed_date is not null")
-    fun getCompletedGoalEntities() : Flow<List<GoalEntity>>
+    @Query("""
+        SELECT g.*, COALESCE(SUM(t.amount), 0) AS savedAmount
+        FROM goals_table g
+        LEFT JOIN transactions_table t ON g.id = t.goal_id
+        GROUP BY g.id
+    """)
+    fun getGoalsWithSavedAmount(): Flow<List<GoalEntityWithSavedAmount>>
 }

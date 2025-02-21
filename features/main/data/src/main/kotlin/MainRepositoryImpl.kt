@@ -14,9 +14,6 @@ class MainRepositoryImpl(
     private val remoteDataSource: KtorMainRemoteDataSource,
     private val localDataSource: RoomMainLocalDataSource
 ) : MainRepository {
-
-    private val newsFlow = localDataSource.getNewsEntities()
-
     override suspend fun fetchTickers(ids: List<String>): List<Ticker> =
         coroutineScope {
             val tickerResponses = ids.map { id ->
@@ -50,16 +47,13 @@ class MainRepositoryImpl(
         val isCacheExpired = cachedNews.firstOrNull()?.let { news ->
             (currentTimestamp - news.insertInDBTimestamp) / 1000 > CacheLocalSeconds.News.RECENT_NEWS
         } ?: true
-        println("TAKS")
         if (mustBeFromInternet || isCacheExpired) {
             val responseNews = remoteDataSource.fetchRecentNewsData()
                 .news
                 // it has to be published
-                .filter { it.date != null }
+                .filter { it.date != null && it.id != it.title && it.id != it.desc}
             refreshNews(responseNews, cachedNews)
         } else {
-            println("ELSE GO ${cachedNews}")
-            println("ELSE GO1 ${cachedNews.filter { it.isImageLoading || it.imageByteArray == null }}")
             cachedNews.filter { it.isImageLoading || it.imageByteArray == null }
                 .forEach { entity ->
                     loadImageAndUpdate(entity)
@@ -67,9 +61,9 @@ class MainRepositoryImpl(
         }
     }
 
-    override fun getNewsFlow(): Flow<List<NewsItem>> = newsFlow.mapToNewsItems()
+    override fun getNewsFlow(): Flow<List<NewsItem>> = localDataSource.getNewsEntities().mapToNewsItems()
 
-    private suspend fun getCachedNews(): List<NewsEntity> = (newsFlow.firstOrNull() ?: emptyList())
+    private suspend fun getCachedNews(): List<NewsEntity> = (localDataSource.getNewsEntities().firstOrNull() ?: emptyList())
 
     private suspend fun refreshNews(
         responseNews: List<RNewsItem>,

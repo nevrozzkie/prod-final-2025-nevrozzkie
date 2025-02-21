@@ -33,12 +33,16 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format
 import kotlinx.datetime.format.char
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import base.TonalCard
+import main.MainComponent
+import main.MainStore
 import view.theme.Paddings
 
 
 fun LazyListScope.newsItemsContent(
-    newsItems: List<NewsItem>,
+    mainModel: MainStore.State,
+    component: MainComponent,
     networkModel: NetworkStateManager.NetworkModel,
 ) {
     item {
@@ -48,10 +52,19 @@ fun LazyListScope.newsItemsContent(
         }
     }
 
-    if (newsItems.isNotEmpty()) {
-        items(newsItems, key = { it.id }) {
+    if (mainModel.news.isNotEmpty()) {
+        items(mainModel.news, key = { it.id }) {
             AnimateColumnItem {
-                NewsItemContent(it)
+                NewsItemContent(it) {
+                    component.onOutput(
+                        MainComponent.Output.NavigateToNewsSite(
+                            url = it.url,
+                            id = it.id,
+                            title = it.title,
+                            image = it.imageBitmap?.toByteArray()
+                        )
+                    )
+                }
             }
         }
     } else {
@@ -66,7 +79,8 @@ fun LazyListScope.newsItemsContent(
 
 @Composable
 private fun NewsItemContent(
-    newsItem: NewsItem
+    newsItem: NewsItem,
+    onClick: () -> Unit
 ) {
     val image =
         newsItem.imageBitmap?.asImageBitmap()
@@ -75,10 +89,6 @@ private fun NewsItemContent(
 
 
 
-    val bottomInfoTextStyle = MaterialTheme.typography.bodySmall.copy(
-        color = MaterialTheme.colorScheme.onSurface.copy(alpha = .5f)
-    )
-
     val imagePlaceholderShades = listOf(
         MaterialTheme.colorScheme.surfaceContainerHighest.copy(0.9f),
         MaterialTheme.colorScheme.surfaceContainerHighest.copy(0.2f),
@@ -86,10 +96,11 @@ private fun NewsItemContent(
     )
 
     Spacer(Modifier.height(Paddings.large))
-    TonalCard (
+    TonalCard(
         modifier = Modifier.padding(
             horizontal = Paddings.hMainContainer
-        )
+        ),
+        onClick = onClick
     ) {
         Column(Modifier.padding(Paddings.medium)) {
             Crossfade(newsItem.isImageLoading, label = "imageNewsItemAnimation") { isImageLoading ->
@@ -120,27 +131,31 @@ private fun NewsItemContent(
                 Text(newsItem.desc)
                 Spacer(Modifier.height(Paddings.semiMedium))
             }
-            Row(
-                Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+
+            CompositionLocalProvider(
+                LocalTextStyle provides bottomInfoTextStyle
             ) {
-                CompositionLocalProvider(
-                    LocalTextStyle provides bottomInfoTextStyle
-                ) {
-                    Text(
-                        buildAnnotatedString {
-                            if (newsItem.source.isNotEmpty()) append(newsItem.source)
-                            if (newsItem.source.isNotEmpty() && !newsItem.geo.isNullOrEmpty()) append(
-                                " · "
-                            )
-                            if (!newsItem.geo.isNullOrEmpty()) append(newsItem.geo)
-                        }
-                    )
-                    Text(
-                        newsItem.date.format(rusFormat)
-                    )
-                }
+                RightImportantLayout(
+                    modifier = Modifier.fillMaxWidth(),
+                    leftSide = {
+                        Text(
+                            buildAnnotatedString {
+                                if (newsItem.source.isNotEmpty()) append(newsItem.source)
+                                if (newsItem.source.isNotEmpty() && !newsItem.geo.isNullOrEmpty()) append(
+                                    " · "
+                                )
+                                if (!newsItem.geo.isNullOrEmpty()) append(newsItem.geo)
+                            },
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    },
+                    rightSide = {
+                        Text(
+                            newsItem.date.format(rusFormat)
+                        )
+                    }
+                )
             }
         }
     }

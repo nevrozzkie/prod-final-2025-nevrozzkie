@@ -1,5 +1,6 @@
 package transactions
 
+import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.arkivanov.mvikotlin.core.store.StoreFactory
@@ -21,8 +22,9 @@ class TransactionsStoreFactory(
         TransactionsStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "TransactionsStore",
-            initialState = TransactionsStore.State(),
+            initialState = State(),
             executorFactory = ::executor,
-            reducer = TransactionsReducer
+            reducer = TransactionsReducer,
+            bootstrapper = SimpleBootstrapper(Unit)
         )
 }

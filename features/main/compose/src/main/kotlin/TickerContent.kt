@@ -57,11 +57,12 @@ fun TickerContent(
     val model by component.model.subscribeAsState()
     val networkModel by component.networkStateManager.networkModel.subscribeAsState()
 
-    val tickers = model.searchTickers.ifEmpty { model.mainTickers }
+    val tickers = model.mainTickers
 
+
+    Spacer(Modifier.height(Paddings.small))
 
     AnimatedVerticalColumn(tickers.isEmpty()) {
-
         Spacer(Modifier.height(Paddings.medium))
     }
     Crossfade(
@@ -93,7 +94,8 @@ fun TickerContent(
                         NetworkCrossfade(
                             networkModel,
                             modifier = Modifier.size(48.dp),
-                            label = "syncTickersCrossfade"
+                            label = "syncTickersCrossfade",
+                            isFullScreen = false
                         ) {
                             IconButton(
                                 onClick = {
@@ -110,12 +112,13 @@ fun TickerContent(
                             },
                             thumbContent = {
                                 Text(
-                                    if (model.isConverted) "₽" else "$"
+                                    if (model.isConverted) "₽" else "$",
                                 )
                             },
                             colors = SwitchDefaults.colors(
-                                uncheckedThumbColor = MaterialTheme.colorScheme.surfaceContainer,
-                                uncheckedBorderColor = MaterialTheme.colorScheme.surfaceContainerHighest
+                                uncheckedThumbColor = MaterialTheme.colorScheme.surface,
+                                uncheckedBorderColor = MaterialTheme.colorScheme.surfaceContainer,
+                                uncheckedTrackColor = MaterialTheme.colorScheme.surfaceContainer
                             )
                         )
 

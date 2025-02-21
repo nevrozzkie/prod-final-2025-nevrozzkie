@@ -19,6 +19,7 @@ object GoalsReducer : Reducer<State, Message> {
                     isEditingGoalAmountValid = isAmountValid
                 )
             }
+
             is Message.PlannedDatePickerShowingChanged -> copy(isPlannedDatePickerShowing = msg.isShowing)
             is Message.EditingGoalPlannedDateChanged -> {
                 val isDateValid = msg.date.isValidRuDate(today) || msg.date.isEmpty()
@@ -28,7 +29,7 @@ object GoalsReducer : Reducer<State, Message> {
                 )
             }
 
-
+            is Message.MaxIdChanged -> copy(maxId = msg.maxId)
         }
     }
 }

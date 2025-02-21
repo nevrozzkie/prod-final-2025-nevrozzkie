@@ -1,5 +1,6 @@
 package goals
 
+import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.arkivanov.mvikotlin.core.store.StoreFactory
@@ -24,6 +25,7 @@ class GoalsStoreFactory(
             name = "GoalsStore",
             initialState = State(),
             executorFactory = ::executor,
-            reducer = GoalsReducer
+            reducer = GoalsReducer,
+            bootstrapper = SimpleBootstrapper(Unit)
         )
 }

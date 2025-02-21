@@ -30,13 +30,15 @@ class NetworkStateManager {
 
     fun nError(
         errorTitle: String,
-        errorDesc: String,
+        errorDesc: String = "",
+        fixText: String = "",
         onFixErrorClick: () -> Unit
     ) {
         _model.value = _model.value.copy(
             state = NetworkState.Error,
             errorTitle = errorTitle,
             errorDesc = errorDesc,
+            fixText = fixText,
             onFixErrorClick = onFixErrorClick
         )
     }
@@ -44,11 +46,14 @@ class NetworkStateManager {
     data class NetworkModel(
         val state: NetworkState = NetworkState.None,
         val errorTitle: String = "",
+        val fixText: String = "",
         val errorDesc: String = "",
         val onFixErrorClick: () -> Unit = {}
     )
 }
 
+val NetworkStateManager.NetworkModel.isOk : Boolean
+    get() = this.state == NetworkState.None
 val NetworkStateManager.NetworkModel.isLoading : Boolean
     get() = this.state == NetworkState.Loading
 val NetworkStateManager.NetworkModel.isNotError : Boolean

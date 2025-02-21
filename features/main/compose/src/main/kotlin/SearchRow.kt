@@ -30,7 +30,7 @@ fun SearchRow() {
     Row {
         CustomSearchBar(
             modifier = Modifier
-                .padding(horizontal = Paddings.hMainContainer, vertical = Paddings.medium)
+                .padding(horizontal = Paddings.hMainContainer).padding(top = Paddings.medium)
                 .height(40.dp)
                 .fillMaxWidth(),
             query = "",
@@ -41,7 +41,7 @@ fun SearchRow() {
 }
 
 
-private object LayoutIds {
+private object SearchRowLayoutIds {
     const val TEXT_FIELD = "textfield"
     const val LEADING_ICON = "leadingIcon"
     const val TRAILING_ICON = "trailingIcon"
@@ -76,7 +76,7 @@ fun CustomSearchBar(
                     imageVector = leadingIcon,
                     contentDescription = null,
                     modifier = Modifier
-                        .layoutId(LayoutIds.LEADING_ICON)
+                        .layoutId(SearchRowLayoutIds.LEADING_ICON)
                         .padding(horizontal = (iconsBoxSize - iconsSize) / 2)
                         .size(iconsSize)
 
@@ -85,7 +85,7 @@ fun CustomSearchBar(
                     value = query,
                     onValueChange = onQueryChange,
                     modifier = Modifier
-                        .layoutId(LayoutIds.TEXT_FIELD),
+                        .layoutId(SearchRowLayoutIds.TEXT_FIELD),
                     textStyle = textStyle,
                     placeholderText = placeholderText
                 )
@@ -95,7 +95,7 @@ fun CustomSearchBar(
                     onClick = onTrailingIconClick,
                     modifier = Modifier
                         .size(iconsBoxSize)
-                        .layoutId(LayoutIds.TRAILING_ICON),
+                        .layoutId(SearchRowLayoutIds.TRAILING_ICON),
                 ) {
                     Icon(
                         imageVector = trailingIcon,
@@ -107,14 +107,14 @@ fun CustomSearchBar(
             },
         ) { measurables, constraints ->
             val leadingIconPlaceable = measurables
-                .fastFirst { it.layoutId == LayoutIds.LEADING_ICON }
+                .fastFirst { it.layoutId == SearchRowLayoutIds.LEADING_ICON }
                 .measure(constraints.copy(minWidth = 0))
 
             val trailingIconPlaceable =
-                measurables.fastFirst { it.layoutId == LayoutIds.TRAILING_ICON }
+                measurables.fastFirst { it.layoutId == SearchRowLayoutIds.TRAILING_ICON }
                     .measure(constraints.copy(minWidth = 0))
             val textFieldPlaceable = measurables
-                .fastFirst { it.layoutId == LayoutIds.TEXT_FIELD }
+                .fastFirst { it.layoutId == SearchRowLayoutIds.TEXT_FIELD }
                 .measure(
                     constraints.copy(
                         minWidth = constraints.maxWidth - leadingIconPlaceable.width

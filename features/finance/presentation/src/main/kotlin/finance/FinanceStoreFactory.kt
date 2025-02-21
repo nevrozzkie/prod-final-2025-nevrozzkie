@@ -1,5 +1,6 @@
 package finance
 
+import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.arkivanov.mvikotlin.core.store.StoreFactory
@@ -21,8 +22,9 @@ class FinanceStoreFactory(
         FinanceStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "FinanceStore",
-            initialState = State,
+            initialState = State(),
             executorFactory = ::executor,
-            reducer = FinanceReducer
+            reducer = FinanceReducer,
+            bootstrapper = SimpleBootstrapper(Unit)
         )
 }

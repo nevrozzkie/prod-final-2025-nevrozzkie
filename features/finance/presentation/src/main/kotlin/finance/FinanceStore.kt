@@ -1,18 +1,29 @@
 package finance
 
 import Goal
+import Transaction
 import com.arkivanov.mvikotlin.core.store.Store
 import finance.FinanceStore.Intent
 import finance.FinanceStore.Label
 import finance.FinanceStore.State
-import kotlinx.coroutines.flow.Flow
 
 interface FinanceStore : Store<Intent, State, Label> {
-    data object State
+    data class State(
+        val transactions: List<Transaction> = emptyList(),
+        val activeGoals: List<Goal> = emptyList(),
+        val completedGoals: List<Goal> = emptyList(),
 
-    sealed interface Intent
+        val totalSavedAmount: Long = 0L,
+        val totalNeededAmount: Long = 0L,
+    )
 
-    sealed interface Message
+    sealed interface Intent {
+    }
+
+    sealed interface Message {
+        data class GoalsGot(val active: List<Goal>, val completed: List<Goal>, val totalNeededAmount: Long, val totalSavedAmount: Long) : Message
+        data class TransactionsGot(val transactions: List<Transaction>) : Message
+    }
 
     sealed interface Label
 

@@ -1,9 +1,13 @@
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Color
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.format
@@ -17,6 +21,18 @@ import java.text.DecimalFormatSymbols
 import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.pow
+
+
+
+val ByteArray?.bitmap: Bitmap?
+    get() = this?.let { BitmapFactory.decodeByteArray(this, 0, this.size) }
+
+// care of "Failed to create image decoder with message 'unimplemented'"
+val ByteArray?.isValid: Boolean
+    get() = this.bitmap != null
+
+val ByteArray?.validated: ByteArray?
+    get() = if(isValid) this else null
 
 fun formatWithoutDotsToDate(input: String): String {
     val digitsOnly = input.replace(Regex("\\D"), "")
@@ -33,7 +49,9 @@ fun formatWithoutDotsToDate(input: String): String {
 
 
 fun String?.isValid() = this?.isNotBlank() == true
-fun Long?.isValid(negativePossible: Boolean) = this?.let { if (!negativePossible) this > 0 else abs(this) > 0 } == true
+fun Long?.isValid(negativePossible: Boolean) =
+    this?.let { if (!negativePossible) this > 0 else abs(this) > 0 } == true
+
 fun String?.isValidRuDate(today: LocalDate?): Boolean {
     return this != null && (this.length == 10 && this.count { it == '.' } == 2) &&
             try {
@@ -54,6 +72,11 @@ val rusFormat = LocalDate.Format {
     char('.')
     year()
 }
+val time24Format = LocalTime.Format {
+    this.hour()
+    char(':')
+    this.minute()
+}
 val dbFormat = LocalDate.Format {
     year()
     char('-')
@@ -63,10 +86,11 @@ val dbFormat = LocalDate.Format {
 }
 
 
-
 fun String.parseToLocalDateSafely(format: DateTimeFormat<LocalDate>) = try {
     LocalDate.parse(this, format)
-} catch (_: Throwable) { null }
+} catch (_: Throwable) {
+    null
+}
 
 fun String.parseToLocalDate(format: DateTimeFormat<LocalDate>) =
     LocalDate.parse(this, format)
@@ -82,13 +106,21 @@ fun Float.formatLikeAmount(withSpaces: Boolean = true): String {
     return formattedNumber
 }
 
-fun String.formatLikeAmount(withSpaces: Boolean = true) = this.reversed()
-    .chunked(3)
-    .joinToString(if (withSpaces) " " else ",")
-    .reversed()
-    .trim()
+fun String.formatLikeAmount(withSpaces: Boolean = true, addRuble: Boolean = false): String {
+    return if (this.isNotEmpty()) {
+        val isMinus = this[0] == '-'
+        val text = this.removePrefix("-").reversed()
+            .chunked(3)
+            .joinToString(if (withSpaces) " " else ",")
+            .reversed()
+            .trim()
+        "${if(isMinus)"-" else ""}$text${if (addRuble) " ₽" else ""}"
+    } else ""
+}
 
-fun Long.formatLikeAmount(withSpaces: Boolean = true) = this.toString().formatLikeAmount(withSpaces)
+
+
+fun Long.formatLikeAmount(withSpaces: Boolean = true, addRuble: Boolean = false) = this.toString().formatLikeAmount(withSpaces, addRuble)
 
 fun Float.roundTo(numFractionDigits: Int): Float {
     val divider = 10f.pow(numFractionDigits)
@@ -123,4 +155,9 @@ fun Instant.toTimestamp(): Long {
 fun Long.toLocalDate(): LocalDate {
     return Instant.fromEpochMilliseconds(this)
         .toLocalDateTime(TimeZone.currentSystemDefault()).date
+}
+// Convert Long (timestamp) back to LocalDate
+fun Long.toLocalDateTime(): LocalDateTime {
+    return Instant.fromEpochMilliseconds(this)
+        .toLocalDateTime(TimeZone.currentSystemDefault())
 }

@@ -78,15 +78,6 @@ suspend fun HttpClient.fetchByteArray(url: String, saveForSeconds: Int = 60 * 60
     }
 }
 
-val ByteArray?.imageBitmap: Bitmap?
-    get() = this?.let { BitmapFactory.decodeByteArray(this, 0, this.size) }
-
-// care of "Failed to create image decoder with message 'unimplemented'"
-val ByteArray?.isValid: Boolean
-    get() = this.imageBitmap != null
-
-val ByteArray?.validated: ByteArray?
-    get() = if(isValid) this else null
 
 
 // DefaultBody

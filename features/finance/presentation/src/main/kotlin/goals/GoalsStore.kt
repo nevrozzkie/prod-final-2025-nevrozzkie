@@ -2,11 +2,12 @@ package goals
 
 import Goal
 import com.arkivanov.mvikotlin.core.store.Store
-import getCurrentLocalDateTime
+
 import goals.GoalsStore.Intent
 import goals.GoalsStore.Label
 import goals.GoalsStore.State
 import kotlinx.datetime.LocalDate
+import utils.getCurrentLocalDateTime
 
 interface GoalsStore : Store<Intent, State, Label> {
     data class State(

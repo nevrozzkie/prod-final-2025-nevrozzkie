@@ -5,14 +5,12 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import dbFormat
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.format
-import parseToLocalDate
 import room.FinanceDatabaseNames
-import room.transactions.TransactionEntity
+import utils.dbFormat
+import utils.parseToLocalDate
 
 @Entity(tableName = FinanceDatabaseNames.Tables.GOALS)
 internal data class GoalEntity(

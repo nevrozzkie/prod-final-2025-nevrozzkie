@@ -1,6 +1,8 @@
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ktor.KtorSearchRemoteDataSource
+import utils.toLocalDate
+import utils.toTimestamp
 
 class SearchRepositoryImpl(
     private val remoteDataSource: KtorSearchRemoteDataSource,

@@ -1,4 +1,4 @@
-
+package utils
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Canvas

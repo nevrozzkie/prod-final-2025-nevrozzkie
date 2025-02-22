@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import kotlinx.coroutines.flow.Flow
 import ktor.RNewsItem
-import validated
-import withDatabaseContext
+import utils.validated
+import utils.withDatabaseContext
 
 internal object MainDatabaseNames {
     object Tables {

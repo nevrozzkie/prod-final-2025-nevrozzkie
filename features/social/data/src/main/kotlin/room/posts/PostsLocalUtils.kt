@@ -7,16 +7,12 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
-import io.ktor.http.HttpMethod.Companion.Post
 import kotlinx.datetime.format
-import kotlinx.serialization.Serializable
 import room.SocialDatabaseNames
 import room.postImages.PostImageEntity
-import rusFormat
-import time24Format
-import toLocalDate
-import toLocalDateTime
-import java.sql.Timestamp
+import utils.rusFormat
+import utils.time24Format
+import utils.toLocalDateTime
 
 
 @Entity(tableName = SocialDatabaseNames.Tables.POSTS)

@@ -1,11 +1,10 @@
 package ktor
 
-import HttpConstants
 import android.graphics.Bitmap
-import androidx.room.Query
-import bitmap
+import consts.HttpConstants
 import io.ktor.client.HttpClient
 import io.ktor.client.request.parameter
+import utils.bitmap
 
 class KtorSearchRemoteDataSource(
     private val hcStock: HttpClient,

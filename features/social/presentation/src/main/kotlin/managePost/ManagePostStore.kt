@@ -4,13 +4,9 @@ import ManagePostDTO
 import PostNewsData
 import android.graphics.Bitmap
 import com.arkivanov.mvikotlin.core.store.Store
-import getCurrentLocalDateTime
-import kotlinx.datetime.format
 import managePost.ManagePostStore.Intent
 import managePost.ManagePostStore.Label
 import managePost.ManagePostStore.State
-import rusFormat
-import time24Format
 
 val ManagePostDTO.Companion.default: ManagePostDTO
     get() {

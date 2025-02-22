@@ -87,10 +87,10 @@ class HttpClientFactory {
                 val dir = File(androidContext.dataDir, "ktor-cache")
                 publicStorage(FileStorage(dir))
             }
-//            install(Logging) {
-//                logger = Logger.SIMPLE
-//                level = LogLevel.ALL
-//            }
+            install(Logging) {
+                logger = Logger.SIMPLE
+                level = LogLevel.ALL
+            }
             install(ContentNegotiation) {
                 json(Json {
                     isLenient = true

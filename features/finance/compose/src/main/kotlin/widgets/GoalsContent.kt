@@ -1,12 +1,6 @@
 package widgets
 
-import AnimateColumnItem
-import CategoryHeaderWithIconButton
-import DefaultSmallCloseButton
-import DropdownMenuOnLongPressContainer
 import Goal
-import RightImportantLayout
-import SaveTextButton
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
@@ -26,7 +20,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CalendarToday
-import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.DropdownMenuItem
@@ -49,16 +42,19 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import base.CBasicTextFieldDefaults
 import base.EditableText
+import base.RightImportantLayout
 import base.TonalCard
 import finance.FinanceComponent
 import finance.FinanceStore
-import formatLikeAmount
 import goals.GoalsComponent
 import goals.GoalsStore
 import utils.EnterAndDisplayMoneyLayout
+import utils.formatLikeAmount
 import utils.progressWithColor
-import view.theme.Paddings
 import utils.visualTransformations.DateVisualTransformation
+import view.theme.Paddings
+import wrapContainers.AnimateColumnItem
+import wrapContainers.DropdownMenuOnLongPressContainer
 import kotlin.math.roundToInt
 
 fun LazyListScope.goalsContent(

@@ -23,12 +23,10 @@ import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.rounded.DarkMode
 import androidx.compose.material.icons.rounded.LightMode
-import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -46,14 +44,19 @@ import androidx.compose.ui.unit.dp
 import base.NetworkCrossfade
 import base.TonalCard
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import decompose.isError
 import decompose.isNotError
 import tickers.TickersComponent
 import tickers.TickersStore
+import utils.formatLikeAmount
+import utils.roundTo
 import view.LocalViewManager
 import view.ThemeTint
 import view.theme.Paddings
 import view.themeColors
+import widgets.ErrorCard
+import widgets.shimmerAnimation
+import wrapContainers.AnimateRowItem
+import wrapContainers.AnimatedVerticalColumn
 
 @Composable
 fun TickerContent(

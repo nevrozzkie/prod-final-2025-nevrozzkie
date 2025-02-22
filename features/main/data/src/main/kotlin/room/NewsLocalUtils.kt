@@ -4,12 +4,12 @@ import NewsItem
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import bitmap
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
-import toLocalDate
-import toTimestamp
+import utils.bitmap
+import utils.toLocalDate
+import utils.toTimestamp
 
 @Entity(tableName = MainDatabaseNames.Tables.NEWS)
 data class NewsEntity(

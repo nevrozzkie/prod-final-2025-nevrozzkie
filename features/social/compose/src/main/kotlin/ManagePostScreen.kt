@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import base.BackButton
 import base.CBasicTextFieldDefaults
 import base.CTopAppBar
 import base.LazyColumnWithTopShadow
@@ -33,8 +34,10 @@ import managePost.ManagePostComponent
 import managePost.ManagePostStore
 import managePost.TagsContent
 import managePost.TextFieldContent
-import socialFeed.SocialFeedStore
 import view.theme.Paddings
+import widgets.CategoryHeaderWithIconButton
+import wrapContainers.AnimateColumnItem
+import wrapContainers.AnimateSlideVertically
 
 @Composable
 fun ManagePostScreen(

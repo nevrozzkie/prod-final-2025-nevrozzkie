@@ -3,7 +3,6 @@ package goals
 import FinanceRepository
 import Goal
 import decompose.DefaultCoroutineExecutor
-import formatWithoutDotsToDate
 import goals.GoalsStore.Intent
 import goals.GoalsStore.Label
 import goals.GoalsStore.State
@@ -12,8 +11,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.datetime.format
-import parseToLocalDateSafely
-import rusFormat
+import utils.formatWithoutDotsToDate
+import utils.parseToLocalDateSafely
+import utils.rusFormat
+
 
 class GoalsExecutor(
     private val financeRepository: FinanceRepository,

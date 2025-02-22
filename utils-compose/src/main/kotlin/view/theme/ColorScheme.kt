@@ -57,6 +57,8 @@ fun ColorScheme.animated(animationSpec: AnimationSpec<Color> = remember { spring
         scrim = this.scrim.animate(animationSpec),
     )
 }
+
+// deepseek yeaah
 val LightColorScheme = ColorScheme(
     primary = Color(0xFFFFEB3B), // Yellow 600
     onPrimary = Color(0xFF212121), // Black

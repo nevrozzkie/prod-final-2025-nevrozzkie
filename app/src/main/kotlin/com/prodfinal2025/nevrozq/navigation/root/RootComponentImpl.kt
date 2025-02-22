@@ -1,12 +1,11 @@
 package com.prodfinal2025.nevrozq.navigation.root
 
+import ManagePostDTO
 import PostNewsData
 import SearchComponent
-import SearchExecutor
 import SocialComponentImpl
 import android.graphics.Bitmap
 import androidx.activity.ComponentActivity
-import bitmap
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.active
@@ -26,6 +25,7 @@ import main.MainComponent
 import managePost.default
 import newYorkTimes.NewYorkTimesComponent
 import socialFeed.SocialFeedComponent
+import utils.bitmap
 import java.io.ByteArrayOutputStream
 import kotlin.reflect.KClass
 

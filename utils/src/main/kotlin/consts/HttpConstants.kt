@@ -1,3 +1,5 @@
+package consts
+
 data object HttpConstants {
     data object Core {
         data object News {

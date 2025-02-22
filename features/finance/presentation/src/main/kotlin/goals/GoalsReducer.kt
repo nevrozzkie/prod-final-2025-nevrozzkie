@@ -1,10 +1,10 @@
 package goals
 
 import com.arkivanov.mvikotlin.core.store.Reducer
-import goals.GoalsStore.State
 import goals.GoalsStore.Message
-import isValid
-import isValidRuDate
+import goals.GoalsStore.State
+import utils.isValid
+import utils.isValidRuDate
 
 object GoalsReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {

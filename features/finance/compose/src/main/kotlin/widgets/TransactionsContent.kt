@@ -1,15 +1,6 @@
 package widgets
 
-import AnimateColumnItem
-import AnimatedBox
-import AnimatedVerticalColumn
-import CategoryHeaderWithIconButton
-import DefaultSmallCloseButton
-import DropdownMenuContainer
-import DropdownMenuOnLongPressContainer
 import Goal
-import RightImportantLayout
-import SaveTextButton
 import Transaction
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
@@ -50,17 +41,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.zIndex
 import base.CBasicTextFieldDefaults
 import base.EditableText
+import base.RightImportantLayout
 import base.TonalCard
-import formatLikeAmount
-import isValid
 import transactions.TransactionsComponent
 import transactions.TransactionsStore
 import utils.EnterAndDisplayMoneyLayout
+import utils.formatLikeAmount
+import utils.isValid
 import view.theme.Paddings
 import view.themeColors
+import wrapContainers.AnimateColumnItem
+import wrapContainers.AnimatedBox
+import wrapContainers.AnimatedVerticalColumn
+import wrapContainers.DropdownMenuContainer
+import wrapContainers.DropdownMenuOnLongPressContainer
 
 @OptIn(ExperimentalFoundationApi::class)
 fun LazyListScope.transactionsContent(

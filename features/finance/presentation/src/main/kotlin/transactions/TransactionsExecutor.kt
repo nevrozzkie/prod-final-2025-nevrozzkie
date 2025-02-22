@@ -3,21 +3,18 @@ package transactions
 import FinanceRepository
 import Goal
 import Transaction
-import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import decompose.DefaultCoroutineExecutor
-import getCurrentLocalDateTime
-import goals.GoalsStore
-import koin.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.datetime.format
-import rusFormat
 import transactions.TransactionsStore.Intent
 import transactions.TransactionsStore.Label
-import transactions.TransactionsStore.State
 import transactions.TransactionsStore.Message
+import transactions.TransactionsStore.State
+import utils.getCurrentLocalDateTime
+import utils.rusFormat
 
 class TransactionsExecutor(
     private val financeRepository: FinanceRepository,

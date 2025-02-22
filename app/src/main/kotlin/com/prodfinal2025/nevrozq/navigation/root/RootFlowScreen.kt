@@ -1,17 +1,11 @@
 package com.prodfinal2025.nevrozq.navigation.root
 
-import AnimateSlideVertically
-import BarShadow
 import FinanceScreen
 import MainScreen
 import NewsWebView
 import SearchScreen
 import SocialFlowScreen
-import android.annotation.SuppressLint
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -26,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import base.BarShadow
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
@@ -35,6 +30,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.prodfinal2025.nevrozq.navigation.bottomBar.DefaultNavigationBar
+import wrapContainers.AnimateSlideVertically
 
 @OptIn(ExperimentalDecomposeApi::class)
 @Composable

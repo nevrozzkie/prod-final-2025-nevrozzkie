@@ -1,22 +1,11 @@
 package managePost
 
 import ManagePostDTO
-import bitmap
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import decompose.DefaultMVIComponent
-import getCurrentLocalDateTime
-import koin.Inject
-import kotlinx.datetime.format
-import kotlinx.serialization.Serializable
-import rusFormat
-import socialFeed.SocialFeedComponent
-import time24Format
-
-
-
+import utils.bitmap
 
 
 class ManagePostComponent(

@@ -1,4 +1,5 @@
 
+import consts.HttpConstants
 import ktor.KtorMainRemoteDataSource
 import org.koin.core.qualifier.named
 import org.koin.dsl.module

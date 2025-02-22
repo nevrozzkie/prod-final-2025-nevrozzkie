@@ -1,4 +1,3 @@
-import android.graphics.Paint.Align
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -33,6 +32,8 @@ import view.theme.Paddings
 import widgets.goalsContent
 import widgets.summaryContent
 import widgets.transactionsContent
+import wrapContainers.AnimateColumnItem
+import utils.subscribeOnLabels
 
 @Composable
 fun FinanceScreen(

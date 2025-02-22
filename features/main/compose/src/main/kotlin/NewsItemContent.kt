@@ -1,10 +1,9 @@
+
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,31 +12,36 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import decompose.NetworkStateManager
-import decompose.isError
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.format
-import kotlinx.datetime.format.char
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import base.RightImportantLayout
 import base.TonalCard
 import com.prodfinal2025.nevrozq.features.main.compose.R
+import decompose.NetworkStateManager
+import decompose.isError
+import kotlinx.datetime.format
 import main.MainComponent
 import main.MainStore
+import utils.rusFormat
+import utils.toByteArray
+import utils.toImageBitmap
+import view.bottomInfoTextStyle
 import view.theme.Paddings
+import widgets.ErrorCard
+import widgets.shimmerAnimation
+import wrapContainers.AnimateColumnItem
+import wrapContainers.AnimatedVerticalColumn
 
 
 fun LazyListScope.newsItemsContent(

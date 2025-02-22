@@ -11,7 +11,7 @@ import room.goals.toEntity
 import room.transactions.TransactionEntityWithGoal
 import room.transactions.TransactionsDao
 import room.transactions.toEntities
-import withDatabaseContext
+import utils.withDatabaseContext
 
 internal data object FinanceDatabaseNames {
     data object Tables {

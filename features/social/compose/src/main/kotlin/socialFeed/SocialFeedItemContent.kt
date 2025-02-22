@@ -1,11 +1,7 @@
 package socialFeed
 
-import AnimatedSmoothTransition
-import DropdownMenuOnLongPressContainer
-import PostNewsData
-import ExpandableTextWithCustomOverflow
 import ManagePostDTO
-import RightImportantLayout
+import PostNewsData
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,11 +25,15 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import base.RightImportantLayout
 import base.TonalCard
-import bottomInfoTextStyle
 import common.PinnedNewsContent
-import toByteArray
+import utils.toByteArray
+import view.bottomInfoTextStyle
 import view.theme.Paddings
+import widgets.ExpandableTextWithCustomOverflow
+import wrapContainers.AnimatedSmoothTransition
+import wrapContainers.DropdownMenuOnLongPressContainer
 
 @Composable
 fun SocialFeedItemContent(

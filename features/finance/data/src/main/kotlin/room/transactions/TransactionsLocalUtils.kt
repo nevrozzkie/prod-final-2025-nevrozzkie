@@ -9,7 +9,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
 import room.FinanceDatabaseNames
-import toTimestamp
+import utils.toTimestamp
+
 
 @Entity(tableName = FinanceDatabaseNames.Tables.TRANSACTIONS)
 internal data class TransactionEntity(

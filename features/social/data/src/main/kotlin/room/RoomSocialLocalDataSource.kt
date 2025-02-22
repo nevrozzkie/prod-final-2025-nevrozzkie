@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.room.Room
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Clock
+import parseToLocalDateSafely
 import room.postFavourites.PostFavoritesDao
 import room.postFavourites.PostFavoritesEntity
 import room.postFavourites.encryption.EncryptionUtils
@@ -13,6 +14,7 @@ import room.postImages.PostImagesDao
 import room.posts.PostEntity
 import room.posts.PostEntityWithImages
 import room.posts.PostsDao
+import rusFormat
 import toTimestamp
 import withDatabaseContext
 
@@ -78,6 +80,26 @@ class RoomSocialLocalDataSource(
             )
             postImagesDao.insertAll(
                 dto.images.map { PostImageEntity(postId = id, imageData = it) })
+        }
+    }
+
+    internal suspend fun updateManagePostDTO(dto: ManagePostDTO) {
+        withDatabaseContext {
+            if (dto.id != null) {
+                postsDao.updatePostFields(
+                    id = dto.id!!,
+                    newsId = dto.newsData?.id,
+                    newsUrl = dto.newsData?.url,
+                    newsIcon = dto.newsData?.icon,
+                    newsTitle = dto.newsData?.title,
+                    text = dto.text,
+                    tags = dto.tags,
+                    editTimestamp = System.currentTimeMillis()
+                )
+                postImagesDao.deleteImagesByPostId(dto.id!!)
+                postImagesDao.insertAll(
+                    dto.images.map { PostImageEntity(postId = dto.id!!, imageData = it) })
+            }
         }
     }
 

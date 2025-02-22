@@ -20,6 +20,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowForward
+import androidx.compose.material.icons.rounded.AutoAwesome
+import androidx.compose.material.icons.rounded.DarkMode
+import androidx.compose.material.icons.rounded.LightMode
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material3.Icon
@@ -47,6 +50,8 @@ import decompose.isError
 import decompose.isNotError
 import tickers.TickersComponent
 import tickers.TickersStore
+import view.LocalViewManager
+import view.ThemeTint
 import view.theme.Paddings
 import view.themeColors
 
@@ -54,6 +59,8 @@ import view.themeColors
 fun TickerContent(
     component: TickersComponent
 ) {
+    val viewManager = LocalViewManager.current
+
     val model by component.model.subscribeAsState()
     val networkModel by component.networkStateManager.networkModel.subscribeAsState()
 
@@ -83,9 +90,29 @@ fun TickerContent(
 
 
                         IconButton(
-                            onClick = {}
+                            onClick = {
+                                val theme = when (viewManager.tint.value) {
+                                    ThemeTint.Auto -> ThemeTint.Dark
+                                    ThemeTint.Dark -> ThemeTint.Light
+                                    ThemeTint.Light -> ThemeTint.Auto
+                                }
+                                changeTheme(
+                                    theme = theme,
+                                    viewManager = viewManager,
+                                    prefs = component.sharedPreferences
+                                )
+                            }
                         ) {
-                            Icon(Icons.Rounded.Menu, null)
+                            AnimatedContent(
+                                when (viewManager.tint.value) {
+                                    ThemeTint.Auto -> Icons.Rounded.AutoAwesome
+                                    ThemeTint.Dark -> Icons.Rounded.DarkMode
+                                    ThemeTint.Light -> Icons.Rounded.LightMode
+                                },
+                                label = "animateThemeButton"
+                            ) { icon ->
+                                Icon(icon, null)
+                            }
                         }
 
                         Spacer(Modifier.weight(1f))
@@ -105,22 +132,9 @@ fun TickerContent(
                                 Icon(Icons.Rounded.Sync, null)
                             }
                         }
-                        Switch(
-                            checked = model.isConverted,
-                            onCheckedChange = {
-                                component.onDispatch(TickersStore.Message.IsConvertedChanged(it))
-                            },
-                            thumbContent = {
-                                Text(
-                                    if (model.isConverted) "₽" else "$",
-                                )
-                            },
-                            colors = SwitchDefaults.colors(
-                                uncheckedThumbColor = MaterialTheme.colorScheme.surface,
-                                uncheckedBorderColor = MaterialTheme.colorScheme.surfaceContainer,
-                                uncheckedTrackColor = MaterialTheme.colorScheme.surfaceContainer
-                            )
-                        )
+
+                        MoneySwitch(model, component)
+
 
                     }
                 }
@@ -133,12 +147,15 @@ fun TickerContent(
 
                         items(tickers, key = { it.title }) { ticker ->
                             AnimateRowItem {
-                                HorizontalTicker(ticker, model.isConverted)
+                                HorizontalTicker(ticker, model.isConverted, modifier = Modifier
+                                    .widthIn(min = 200.dp)
+                                    .height(100.dp)
+                                    .padding(Paddings.medium))
                                 Spacer(Modifier.width(Paddings.semiMedium))
                             }
                         }
                     } else {
-                        items(3) {
+                        items(model.mainTickersIds.size) {
                             AnimateRowItem {
                                 HorizontalTickerPlaceholder()
                                 Spacer(Modifier.width(Paddings.semiMedium))
@@ -163,6 +180,29 @@ fun TickerContent(
 }
 
 @Composable
+fun MoneySwitch(
+    model: TickersStore.State,
+    component: TickersComponent
+) {
+    Switch(
+        checked = model.isConverted,
+        onCheckedChange = {
+            component.onDispatch(TickersStore.Message.IsConvertedChanged(it))
+        },
+        thumbContent = {
+            Text(
+                if (model.isConverted) "₽" else "$",
+            )
+        },
+        colors = SwitchDefaults.colors(
+            uncheckedThumbColor = MaterialTheme.colorScheme.surface,
+            uncheckedBorderColor = MaterialTheme.colorScheme.surfaceContainer,
+            uncheckedTrackColor = MaterialTheme.colorScheme.surfaceContainer
+        )
+    )
+}
+
+@Composable
 private fun HorizontalTickerPlaceholder() {
     Box(
         modifier = Modifier
@@ -177,9 +217,11 @@ private fun HorizontalTickerPlaceholder() {
 }
 
 @Composable
-private fun HorizontalTicker(
+fun HorizontalTicker(
     ticker: Ticker,
-    isConverted: Boolean
+    isConverted: Boolean,
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = MaterialTheme.colorScheme.surfaceContainer,
 ) {
 
     val icon =
@@ -217,10 +259,7 @@ private fun HorizontalTicker(
         contentColor = priceColor
     ) {
         Row(
-            modifier = Modifier
-                .widthIn(min = 200.dp)
-                .height(100.dp)
-                .padding(Paddings.medium),
+            modifier = modifier,
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (icon != null) {

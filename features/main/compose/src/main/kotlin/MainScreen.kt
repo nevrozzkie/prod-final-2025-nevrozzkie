@@ -1,6 +1,7 @@
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.EaseInExpo
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,15 +11,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.CrueltyFree
+import androidx.compose.material.icons.rounded.Newspaper
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -28,7 +37,10 @@ import base.CTopAppBar
 import base.LazyColumnWithTopShadow
 import base.easedVerticalGradient
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import decompose.isLoading
+import kotlinx.coroutines.launch
 import main.MainComponent
+import main.MainStore
 import tickers.TickersStore
 import view.theme.Paddings
 
@@ -47,25 +59,46 @@ private fun MainContent(
     val mainModel by component.model.subscribeAsState()
     val networkModel by component.networkStateManager.networkModel.subscribeAsState()
 
+
     val tickersComponent = component.tickersComponent
+    val tickersNetworkModel by tickersComponent.networkStateManager.networkModel.subscribeAsState()
+
     Scaffold(
         Modifier.fillMaxSize(),
         topBar = {
             CTopAppBar(
                 title = "Главная"
             ) {
-                SearchRow()
+                SearchRow(
+                    trailingIcon = Icons.Rounded.Newspaper
+                ) {
+                    component.onOutput(
+                        MainComponent.Output.NavigateToSearch(
+                            tickersComponent = tickersComponent,
+                            mainComponent = component
+                        )
+                    )
+                }
             }
         }
     ) { paddings ->
-        LazyColumnWithTopShadow(
-            topPadding = paddings.calculateTopPadding(),
-            isShadowAlways = false
+        PullToRefreshBox(
+            isRefreshing = (networkModel.isLoading || tickersNetworkModel.isLoading),
+            onRefresh = {
+                tickersComponent.onEvent(TickersStore.Intent.FetchMainTickers)
+                component.onEvent(MainStore.Intent.Refresh)
+
+            },
+            modifier = Modifier.padding(top = paddings.calculateTopPadding())
         ) {
-            item(key = "tickers") {
-                TickerContent(tickersComponent)
+            LazyColumnWithTopShadow(
+                isShadowAlways = false
+            ) {
+                item(key = "tickers") {
+                    TickerContent(tickersComponent)
+                }
+                newsItemsContent(mainModel, component, networkModel)
             }
-            newsItemsContent(mainModel, component, networkModel)
         }
     }
 

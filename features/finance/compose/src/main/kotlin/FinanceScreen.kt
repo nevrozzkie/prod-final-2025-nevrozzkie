@@ -1,21 +1,28 @@
+import android.graphics.Paint.Align
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import base.CTopAppBar
 import base.LazyColumnWithTopShadow
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
@@ -116,19 +123,48 @@ private fun FinanceContent(
                     Spacer(Modifier.height(Paddings.vNoShadow))
                 }
             }
-            summaryContent(model, component)
+            if ((activeGoals + completedGoals).isNotEmpty() || goalsModel.editingGoal != null) {
+                summaryContent(model, component)
 
-            goalsContent(
-                model = goalsModel,
-                component = goalsComponent,
-                activeGoals = activeGoals
-            )
-            transactionsContent(
-                model = transactionsModel,
-                transactions = transactions,
-                component = transactionsComponent,
-                goals = activeGoals
-            )
+                goalsContent(
+                    model = goalsModel,
+                    component = goalsComponent,
+                    activeGoals = activeGoals,
+                    financeComponent = component
+                )
+                if (activeGoals.isNotEmpty()) {
+                    transactionsContent(
+                        model = transactionsModel,
+                        transactions = transactions,
+                        component = transactionsComponent,
+                        goals = activeGoals
+                    )
+                }
+            } else {
+                item {
+                    Column(
+                        Modifier.fillMaxSize().padding(top = Paddings.bottomScrollPadding*3),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text("Отслеживайте свои финансы уже сегодня!", fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+                        Button(
+                            onClick = {
+                                goalsComponent.onEvent(GoalsStore.Intent.StartCreatingOrEditing(
+                                    id = goalsModel.maxId + 1,
+                                    name = "",
+                                    amount = 0,
+                                    createdDate = null,
+                                    plannedDate = null
+                                ))
+                                println("TEST: ${goalsModel.editingGoal}")
+                            }
+                        ) {
+                            Text("Начать")
+                        }
+                    }
+                }
+            }
         }
 
 

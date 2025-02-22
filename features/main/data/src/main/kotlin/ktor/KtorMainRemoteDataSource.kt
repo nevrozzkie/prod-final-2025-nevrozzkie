@@ -4,10 +4,21 @@ import HttpConstants
 import android.graphics.Bitmap
 import bitmap
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.parameter
-
-
+import io.ktor.http.HttpMethod
+import io.ktor.http.headers
+import io.ktor.http.parameters
+import io.ktor.http.parametersOf
+import io.ktor.websocket.Frame
+import io.ktor.websocket.readText
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 
 // what about creating 3 classes instead 1?
@@ -16,7 +27,6 @@ class KtorMainRemoteDataSource(
     private val hcExchange: HttpClient,
     private val hcNews: HttpClient
 ) {
-
     internal suspend fun fetchRecentNewsData(): RFetchNewsResponse {
         return with(HttpConstants.Paths.News) {
             hcNews.dGet(FETCH_RECENT, HttpConstants.CacheSeconds.News.RECENT_NEWS) {

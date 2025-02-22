@@ -12,7 +12,8 @@ fun SystemBarsColorFix(viewManager: ViewManager) {
     val systemUiController = rememberSystemUiController()
     systemUiController.setSystemBarsColor(
         color = Color.Transparent,
-        darkIcons = viewManager.tint.value != ThemeTint.Dark,
+        darkIcons = viewManager.tint.value == ThemeTint.Light || viewManager.tint.value != ThemeTint.Dark &&
+                viewManager.tint.value == ThemeTint.Auto && !isSystemInDarkTheme(),
         isNavigationBarContrastEnforced = false
     )
 }

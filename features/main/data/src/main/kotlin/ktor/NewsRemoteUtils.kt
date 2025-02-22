@@ -8,13 +8,13 @@ import toTimestamp
 
 
 @Serializable
-internal data class RFetchNewsResponse(
+data class RFetchNewsResponse(
     @SerialName("results")
     val news: List<RNewsItem>
 )
 
 @Serializable
-internal data class RNewsItem(
+data class RNewsItem(
     @SerialName("slug_name") val id: String,
     @SerialName("geo_facet") val geo: List<String>,
     val title: String,
@@ -40,7 +40,7 @@ internal data class RNewsItem(
 
 
 @Serializable
-internal data class RNewsMultimedia(
+data class RNewsMultimedia(
     val url: String,
     val height: Int,
     val width: Int,

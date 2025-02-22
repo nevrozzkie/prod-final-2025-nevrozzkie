@@ -53,6 +53,11 @@ class MainComponent(
             val title: String,
             val image: ByteArray?
         ) : Output()
+
+        data class NavigateToSearch(
+            val tickersComponent: TickersComponent,
+            val mainComponent: MainComponent
+        ) : Output()
     }
 
 }

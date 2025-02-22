@@ -27,18 +27,21 @@ data object HttpConstants {
 
             const val FETCH_PRICE = PRE_PATH + "quote"
             const val FETCH_INFO = PRE_PATH + "stock/profile2"
+            const val SEARCH = PRE_PATH + "search"
         }
 
         data object News {
             private const val PRE_PATH = "svc/news/v3/"
             const val FETCH_RECENT = PRE_PATH + "content/all/all.json"
+            const val SEARCH = "svc/search/v2/articlesearch.json"
         }
     }
 
     data object CacheSeconds {
         data object Stock {
             const val COMPANY_INFO = 60 * 60
-            const val TICKER_PRICE = 0
+            const val TICKER_PRICE = 60 * 5
+            const val SEARCH = 60 * 60
         }
         data object Exchange {
             const val EXCHANGE_RATE = 60 * 30
@@ -47,6 +50,7 @@ data object HttpConstants {
             // cuz we cache it in local
             const val RECENT_NEWS = 0
             const val RECENT_NEWS_IMAGE = 0
+            const val SEARCH = 60 * 60
         }
 
 

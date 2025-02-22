@@ -35,11 +35,16 @@
             <option value="$PROJECT_DIR$/features/main/compose" />
             <option value="$PROJECT_DIR$/features/main/data" />
             <option value="$PROJECT_DIR$/features/main/presentation" />
-            <option value="$PROJECT_DIR$/features/social-feed" />
-            <option value="$PROJECT_DIR$/features/social-feed/api" />
-            <option value="$PROJECT_DIR$/features/social-feed/compose" />
-            <option value="$PROJECT_DIR$/features/social-feed/data" />
-            <option value="$PROJECT_DIR$/features/social-feed/presentation" />
+            <option value="$PROJECT_DIR$/features/search" />
+            <option value="$PROJECT_DIR$/features/search/api" />
+            <option value="$PROJECT_DIR$/features/search/compose" />
+            <option value="$PROJECT_DIR$/features/search/data" />
+            <option value="$PROJECT_DIR$/features/search/presentation" />
+            <option value="$PROJECT_DIR$/features/social" />
+            <option value="$PROJECT_DIR$/features/social/api" />
+            <option value="$PROJECT_DIR$/features/social/compose" />
+            <option value="$PROJECT_DIR$/features/social/data" />
+            <option value="$PROJECT_DIR$/features/social/presentation" />
             <option value="$PROJECT_DIR$/utils" />
             <option value="$PROJECT_DIR$/utils-compose" />
           </set>

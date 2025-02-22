@@ -50,6 +50,8 @@ import androidx.compose.ui.unit.dp
 import base.CBasicTextFieldDefaults
 import base.EditableText
 import base.TonalCard
+import finance.FinanceComponent
+import finance.FinanceStore
 import formatLikeAmount
 import goals.GoalsComponent
 import goals.GoalsStore
@@ -62,7 +64,8 @@ import kotlin.math.roundToInt
 fun LazyListScope.goalsContent(
     model: GoalsStore.State,
     activeGoals: List<Goal>,
-    component: GoalsComponent
+    component: GoalsComponent,
+    financeComponent: FinanceComponent,
 ) {
     item {
         AnimateColumnItem {
@@ -94,7 +97,8 @@ fun LazyListScope.goalsContent(
             GoalCard(
                 model = model,
                 originalGoal = item,
-                component = component
+                component = component,
+                financeComponent = financeComponent
             )
         }
     }
@@ -105,7 +109,8 @@ fun LazyListScope.goalsContent(
 private fun GoalCard(
     originalGoal: Goal,
     model: GoalsStore.State,
-    component: GoalsComponent
+    component: GoalsComponent,
+    financeComponent: FinanceComponent,
 ) {
     val editingGoal = model.editingGoal
     val isEditable = editingGoal?.id == originalGoal.id
@@ -124,17 +129,17 @@ private fun GoalCard(
     DropdownMenuOnLongPressContainer(
         !isEditable,
         dropdownContent = { isDropdownExpanded ->
-            DropdownMenuItem(
-                text = {
-                    Text("Отменить")
-                },
-                leadingIcon = {
-                    Icon(Icons.Rounded.Close, null)
-                },
-                onClick = {
-                    isDropdownExpanded.value = false
-                }
-            )
+//            DropdownMenuItem(
+//                text = {
+//                    Text("Отменить")
+//                },
+//                leadingIcon = {
+//                    Icon(Icons.Rounded.Close, null)
+//                },
+//                onClick = {
+//                    isDropdownExpanded.value = false
+//                }
+//            )
 
 
             DropdownMenuItem(
@@ -168,6 +173,7 @@ private fun GoalCard(
                         Icon(Icons.Rounded.Done, null)
                     },
                     onClick = {
+                        financeComponent.onEvent(FinanceStore.Intent.CompleteGoal(goal))
                         isDropdownExpanded.value = false
                     }
                 )
@@ -250,16 +256,6 @@ private fun GoalCard(
                             imeAction = ImeAction.Next,
                             isTextField = isEditMode
                         )
-//                        EditableText(
-//                            textStyle = MaterialTheme.typography.titleMedium.copy(textAlign = TextAlign.End),
-//                            modifier = Modifier
-//                                .animateContentSize()
-//                                .weight(1f, false),
-//                            visualTransformation = MoneyOnlyLongVisualTransformation(),
-//                            keyboardOptions = KeyboardOptions(
-//                                keyboardType = KeyboardType.Number,
-//                            ),
-//                        )
                     }
                     if (isEditMode) {
                         Spacer(Modifier.height(Paddings.medium))
@@ -329,6 +325,7 @@ private fun GoalCard(
                                 fontWeight = FontWeight.Bold
                             )
                         }
+                        Text("Вы накопили ${goal.savedAmount.formatLikeAmount()} ₽", fontWeight = FontWeight.SemiBold)
 
                     }
                 }

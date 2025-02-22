@@ -9,6 +9,7 @@ import io.ktor.client.engine.android.Android
 import io.ktor.client.engine.android.AndroidClientEngine
 import io.ktor.client.engine.android.AndroidEngineConfig
 import io.ktor.client.engine.cio.CIO
+import io.ktor.client.engine.cio.CIOEngineConfig
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.HttpTimeout
@@ -50,10 +51,11 @@ import kotlin.math.max
 class HttpClientFactory {
     fun createFactory(
         androidContext: Context,
-        block: HttpClientConfig<AndroidEngineConfig>.() -> Unit = {},
+        block: HttpClientConfig<CIOEngineConfig>.() -> Unit = {},
         defaultRequestBlock: (DefaultRequest.DefaultRequestBuilder.() -> Unit)? = null
     ) =
         HttpClient(CIO) {
+            this@HttpClient.block()
             install("forceCache") {
                 receivePipeline.intercept(HttpReceivePipeline.Before) { response ->
                     this.proceedWith(object : HttpResponse() {
@@ -85,15 +87,16 @@ class HttpClientFactory {
                 val dir = File(androidContext.dataDir, "ktor-cache")
                 publicStorage(FileStorage(dir))
             }
-            install(Logging) {
-                logger = Logger.SIMPLE
-                level = LogLevel.ALL
-            }
+//            install(Logging) {
+//                logger = Logger.SIMPLE
+//                level = LogLevel.ALL
+//            }
             install(ContentNegotiation) {
                 json(Json {
                     isLenient = true
                     ignoreUnknownKeys = true
                     prettyPrint = true
+                    this.coerceInputValues = true
                 }, contentType = ContentType.Any)
             }
             install(HttpTimeout) {

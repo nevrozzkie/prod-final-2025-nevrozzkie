@@ -1,9 +1,12 @@
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material.icons.rounded.Mic
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -12,9 +15,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.text.TextStyle
@@ -26,17 +31,38 @@ import view.theme.Paddings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchRow() {
-    Row {
+fun SearchRow(
+    query: String = "",
+    onQueryChange: (String) -> Unit = {},
+    trailingIcon: ImageVector? = Icons.Rounded.ArrowForward,
+    onTrailingIconClick: () -> Unit = {},
+    onClick: (() -> Unit)? = null,
+) {
+    Box {
         CustomSearchBar(
             modifier = Modifier
-                .padding(horizontal = Paddings.hMainContainer).padding(top = Paddings.medium)
+                .padding(horizontal = Paddings.hMainContainer)
+                .padding(top = Paddings.medium)
                 .height(40.dp)
                 .fillMaxWidth(),
-            query = "",
-            onQueryChange = {},
-
+            query = query,
+            onQueryChange = onQueryChange,
+            onTrailingIconClick = onTrailingIconClick,
+            trailingIcon = trailingIcon
             )
+        if (onClick != null) {
+            Box(
+                Modifier
+                    .matchParentSize()
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onTap = {
+                                onClick()
+                            }
+                        )
+                    })
+        }
+
     }
 }
 
@@ -53,7 +79,7 @@ fun CustomSearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
     leadingIcon: ImageVector = Icons.Rounded.Search,
-    trailingIcon: ImageVector = Icons.Rounded.Mic,
+    trailingIcon: ImageVector? = Icons.Rounded.ArrowForward,
     onTrailingIconClick: () -> Unit = {},
     textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     contentColor: Color = MaterialTheme.colorScheme.surfaceContainerHighest,
@@ -61,10 +87,11 @@ fun CustomSearchBar(
     shape: Shape = MaterialTheme.shapes.medium,
     modifier: Modifier,
     placeholderText: String = "Поиск",
-) {
+
+    ) {
     val iconsSize = 24.dp
     val iconsBoxSize = 48.dp
-    TonalCard (
+    TonalCard(
         modifier = modifier,
         shape = shape,
         containerColor = containerColor,
@@ -95,13 +122,16 @@ fun CustomSearchBar(
                     onClick = onTrailingIconClick,
                     modifier = Modifier
                         .size(iconsBoxSize)
+                        .alpha(if (trailingIcon != null) 1f else 0f)
                         .layoutId(SearchRowLayoutIds.TRAILING_ICON),
                 ) {
-                    Icon(
-                        imageVector = trailingIcon,
-                        contentDescription = null,
-                        modifier = Modifier.size(iconsSize)
-                    )
+                    if (trailingIcon != null) {
+                        Icon(
+                            imageVector = trailingIcon,
+                            contentDescription = null,
+                            modifier = Modifier.size(iconsSize)
+                        )
+                    }
                 }
 
             },

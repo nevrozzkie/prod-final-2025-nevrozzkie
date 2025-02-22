@@ -20,7 +20,9 @@ class MainExecutor(
         fetchRecentNews(false)
     }
     override fun executeIntent(intent: Intent) {
-
+            when(intent) {
+                Intent.Refresh -> fetchRecentNews(true)
+            }
     }
 
     private fun getNewsFromDb() {

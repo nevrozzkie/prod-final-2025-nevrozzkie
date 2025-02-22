@@ -15,6 +15,10 @@ class SocialRepositoryImpl(
         localDataSource.insertManagePostDTO(managePostDTO)
     }
 
+    override suspend fun updatePost(managePostDTO: ManagePostDTO) {
+        localDataSource.updateManagePostDTO(managePostDTO)
+    }
+
     override suspend fun fetchPosts(): Flow<List<Post>> =
         localDataSource.fetchPostsEntities()
             .combine(localDataSource.fetchPostsFavourites()) { posts, favourites ->

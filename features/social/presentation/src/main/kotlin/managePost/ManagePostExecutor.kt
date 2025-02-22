@@ -40,6 +40,17 @@ class ManagePostExecutor(
                     id = null
                 )
             )
+            else socialRepository.updatePost(
+                managePostDTO = ManagePostDTO(
+                    images = state().images.map { it.toByteArray() },
+                    tags = state().pickedTags,
+                    text = state().text,
+                    creationDate = null,
+                    creationTime = null,
+                    newsData = state().newsData,
+                    id = state().id
+                )
+            )
 
         }.invokeOnCompletion {
             output(ManagePostComponent.Output.NavigateToFeed)

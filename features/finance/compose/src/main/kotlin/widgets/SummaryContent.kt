@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -62,7 +63,20 @@ fun LazyListScope.summaryContent(
                     Column(Modifier.padding(Paddings.medium)) {
                         Text("Выполнено", fontWeight = FontWeight.Medium)
                         Text(
-                            model.activeGoals.size.toString(), modifier = Modifier.fillMaxWidth(),
+                            model.completedGoals.size.toString(), modifier = Modifier.fillMaxWidth(),
+                            fontWeight = FontWeight.Black,
+                            textAlign = TextAlign.End
+                        )
+                    }
+                }
+                Spacer(Modifier.width(Paddings.medium))
+                TonalCard(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(Modifier.padding(Paddings.medium)) {
+                        Text("Осталось накопить", fontWeight = FontWeight.Medium)
+                        Text(
+                            "${(model.totalNeededAmount- model.totalSavedAmount).coerceAtLeast(0).formatLikeAmount()} ₽", modifier = Modifier.fillMaxWidth(),
                             fontWeight = FontWeight.Black,
                             textAlign = TextAlign.End
                         )
@@ -84,7 +98,7 @@ private fun CircularPercentBar(
     )
     Box(contentAlignment = Alignment.Center) {
         Text(
-            "${progressPercent.roundToInt()}%",
+            "${progressPercent.roundToInt().coerceAtMost(500)}%",
             fontWeight = FontWeight.Black,
             style = MaterialTheme.typography.displayMedium
         )

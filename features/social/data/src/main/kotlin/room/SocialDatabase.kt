@@ -13,7 +13,7 @@ import room.posts.PostEntity
 import room.posts.PostsDao
 
 @TypeConverters(PostConverters::class, EncryptionConverter::class)
-@Database(entities = [PostEntity::class, PostImageEntity::class, PostFavoritesEntity::class], version = 11)
+@Database(entities = [PostEntity::class, PostImageEntity::class, PostFavoritesEntity::class], version = 13)
 internal abstract class SocialDatabase : RoomDatabase() {
     abstract fun postsDao(): PostsDao
     abstract fun postImageDao(): PostImagesDao

@@ -43,7 +43,7 @@ interface ManagePostStore : Store<Intent, State, Label> {
         val pickedTags: List<Int>,
         val text: String,
         val newsData: PostNewsData?,
-        val isReady: Boolean = false
+        val isReady: Boolean
     )
 
     sealed interface Intent {

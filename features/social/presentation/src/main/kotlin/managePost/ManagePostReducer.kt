@@ -9,7 +9,7 @@ object ManagePostReducer : Reducer<State, Message> {
         return when (msg) {
             is Message.TagsChanged -> copy(
                 pickedTags = msg.tags,
-                isReady = isReadyCheck(
+                isReady = isManagePostReadyToSaveCheck(
                     text = text,
                     tags = msg.tags
                 )
@@ -17,7 +17,7 @@ object ManagePostReducer : Reducer<State, Message> {
             is Message.ImagesChanged -> copy(images = msg.images)
             is Message.TextChanged -> copy(
                 text = msg.text,
-                isReady = isReadyCheck(
+                isReady = isManagePostReadyToSaveCheck(
                     text = msg.text,
                     tags = pickedTags
                 )
@@ -29,6 +29,6 @@ object ManagePostReducer : Reducer<State, Message> {
         }
     }
 
-    // here cuz it's simple
-    private fun isReadyCheck(text: String, tags: List<Int>) = text.isNotBlank() && tags.isNotEmpty()
 }
+
+fun isManagePostReadyToSaveCheck(text: String, tags: List<Int>) = text.isNotBlank() && tags.isNotEmpty()

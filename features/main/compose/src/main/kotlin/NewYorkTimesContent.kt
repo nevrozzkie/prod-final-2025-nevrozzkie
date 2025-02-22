@@ -45,7 +45,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import base.CTopAppBar
 import base.NetworkCrossfade
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.prodfinal2025.nevrozq.features.compose.R
+import com.prodfinal2025.nevrozq.features.main.compose.R
 import decompose.isNotError
 import decompose.isOk
 import newYorkTimes.NewYorkTimesComponent

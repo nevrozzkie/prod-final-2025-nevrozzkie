@@ -42,7 +42,7 @@ internal data class PostEntityWithImages(
 ) {
     fun toPost(isFavourite: Boolean) = run {
         val creationDateTime = post.creationTimestamp.toLocalDateTime()
-        println("MEOWxx: ${post.creationTimestamp} ${post.editTimestamp}")
+        println("MEOWxx: ${post.id}")
         Post(
             id = post.id,
             images = images.map { it.imageData },

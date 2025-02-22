@@ -34,7 +34,8 @@ class ManagePostComponent(
             images = post.images.mapNotNull { it.bitmap },
             pickedTags = post.tags,
             newsData = post.newsData,
-            text = post.text
+            text = post.text,
+            isReady = isManagePostReadyToSaveCheck(text = post.text, tags = post.tags)
         )
     )
     override val store: ManagePostStore

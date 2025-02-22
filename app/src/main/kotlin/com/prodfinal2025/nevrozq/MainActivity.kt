@@ -27,7 +27,9 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
+import searchModule
 import socialModule
+import themeSettings
 import view.theme.AppTheme
 import view.LocalViewManager
 import view.ThemeTint
@@ -49,12 +51,13 @@ class MainActivity : ComponentActivity() {
                 coreModule,
                 mainModule,
                 financeModule,
-                socialModule
+                socialModule,
+                searchModule
             )
         }
         enableEdgeToEdge()
         val prefs: SharedPreferences = Inject.instance()
-        val viewManager = getViewManager("Auto")
+        val viewManager = getViewManager(prefs.getString(themeSettings, "Dark") ?: "Dark")
 
         val rootComponent = RootComponentImpl(
             componentContext = defaultComponentContext(),
@@ -67,52 +70,14 @@ class MainActivity : ComponentActivity() {
                 LocalViewManager provides viewManager
             ) {
                 AppTheme {
-//                    Box() {
                     Surface(
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
                     ) {
                         RootFlowScreen(rootComponent)
                     }
-
-//                    Button(
-//                        modifier = Modifier.safeContentPadding(),
-//                        onClick = {
-//                            viewManager.tint.value =
-//                                if (viewManager.isDark.value) ThemeTint.Light
-//                                else ThemeTint.Dark
-//                        }
-//                    ) {
-//                        Text("Change Theme")
-//                    }
                 }
             }
         }
     }
-}
-
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    val viewManager = LocalViewManager.current
-    val a: SharedPreferences = Inject.instance()
-    Button(
-        onClick = {
-            viewManager.tint.value =
-                if (viewManager.tint.value == ThemeTint.Dark) ThemeTint.Light
-                else ThemeTint.Dark
-            a.edit().putString("meowik", viewManager.tint.value.name).apply()
-        },
-        modifier = modifier
-    ) {
-        Text(viewManager.tint.value.name)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-//    IndividualProdTheme {
-    Greeting("Android")
-//    }
 }

@@ -70,9 +70,8 @@ class SocialComponentImpl(
     private fun onSocialFeedOutput(output: SocialFeedComponent.Output): Unit =
         when (output) {
             is SocialFeedComponent.Output.NavigateToManagePost -> {
-                val postDTO = output.post.let {
-                    ManagePostDTO.default
-                }
+                val postDTO = output.post ?: ManagePostDTO.default
+
                 nav.bringToFront(
                     ManagePost(
                         post = postDTO

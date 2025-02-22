@@ -12,7 +12,7 @@ import toLocalDate
 import toTimestamp
 
 @Entity(tableName = MainDatabaseNames.Tables.NEWS)
-internal data class NewsEntity(
+data class NewsEntity(
     @PrimaryKey val id: String,
     val title: String,
     val desc: String,

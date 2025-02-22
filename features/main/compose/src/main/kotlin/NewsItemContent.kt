@@ -26,7 +26,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.prodfinal2025.nevrozq.features.compose.R.drawable.prod_placeholder
 import decompose.NetworkStateManager
 import decompose.isError
 import kotlinx.datetime.LocalDate
@@ -35,6 +34,7 @@ import kotlinx.datetime.format.char
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import base.TonalCard
+import com.prodfinal2025.nevrozq.features.main.compose.R
 import main.MainComponent
 import main.MainStore
 import view.theme.Paddings
@@ -78,7 +78,7 @@ fun LazyListScope.newsItemsContent(
 
 
 @Composable
-private fun NewsItemContent(
+fun NewsItemContent(
     newsItem: NewsItem,
     onClick: () -> Unit
 ) {
@@ -108,7 +108,7 @@ private fun NewsItemContent(
                     NewsItemImagePlaceholder(imagePlaceholderShades)
                 } else {
                     Image(
-                        bitmap = image ?: painterResource(prod_placeholder).toImageBitmap(),
+                        bitmap = image ?: painterResource(R.drawable.prod_placeholder).toImageBitmap(),
                         contentDescription = null,
                         modifier = Modifier
                             .fillMaxWidth()

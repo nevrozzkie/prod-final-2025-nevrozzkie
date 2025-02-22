@@ -1,6 +1,8 @@
 package com.prodfinal2025.nevrozq.navigation.root
 
 import PostNewsData
+import SearchComponent
+import SearchExecutor
 import SocialComponentImpl
 import android.graphics.Bitmap
 import androidx.activity.ComponentActivity
@@ -88,8 +90,24 @@ class RootComponentImpl(
                         output = ::onNewYorkTimesOutput,
                     )
                 )
+
+            is Config.Search -> Child.SearchChild(
+                SearchComponent(
+                    componentContext = childContext,
+                    storeFactory = storeFactory,
+                    tickersComponent = config.tickersComponent,
+                    output = ::onSearchOutput
+                )
+            )
         }
 
+    private fun onSearchOutput(
+        output: SearchComponent.Output
+    )
+            : Unit =
+        when (output) {
+            SearchComponent.Output.NavigateBack -> popOnce(Child.SearchChild::class)
+        }
 
     private fun onSocialFeedOuput(output: SocialFeedComponent.Output): Unit =
         when (output) {
@@ -120,6 +138,13 @@ class RootComponentImpl(
                         title = output.title
                     )
                 )
+            }
+
+            is MainComponent.Output.NavigateToSearch -> {
+                nav.bringToFront(Config.Search(
+                    tickersComponent = output.tickersComponent,
+                    mainComponent = output.mainComponent
+                ))
             }
         }
 

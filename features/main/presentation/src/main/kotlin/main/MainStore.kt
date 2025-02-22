@@ -12,6 +12,7 @@ interface MainStore : Store<Intent, State, Label> {
     )
 
     sealed interface Intent {
+        data object Refresh : Intent
     }
 
     sealed interface Message {

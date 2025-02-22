@@ -18,6 +18,7 @@ interface FinanceStore : Store<Intent, State, Label> {
     )
 
     sealed interface Intent {
+        data class CompleteGoal(val goal: Goal) : Intent
     }
 
     sealed interface Message {

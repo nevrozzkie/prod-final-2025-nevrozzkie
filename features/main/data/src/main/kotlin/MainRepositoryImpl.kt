@@ -1,8 +1,13 @@
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.datetime.Clock
 import ktor.KtorMainRemoteDataSource
 import ktor.RNewsItem
@@ -14,16 +19,22 @@ class MainRepositoryImpl(
     private val remoteDataSource: KtorMainRemoteDataSource,
     private val localDataSource: RoomMainLocalDataSource
 ) : MainRepository {
-    override suspend fun fetchTickers(ids: List<String>): List<Ticker> =
+
+
+    override suspend fun fetchTickers(ids: List<String>, canBeErrors: Boolean): List<Ticker> =
         coroutineScope {
             val tickerResponses = ids.map { id ->
                 async {
-                    remoteDataSource.fetchTickerData(id)
+                    try {
+                        remoteDataSource.fetchTickerData(id)
+                    } catch (_: Throwable) {
+                        if (canBeErrors) null else throw Exception("Unexpected error fetching ticker data for id $id")
+                    }
                 }
             }.awaitAll()
 
             // fetch logo
-            tickerResponses.map { (info, price) ->
+            tickerResponses.filterNotNull().map { (info, price) ->
                 val exchangeRate =
                     remoteDataSource.fetchExchangeRateToRuble(info.currency).conversionRate
                 val logo = remoteDataSource.fetchTickerLogoBitmap(info.logo)
@@ -39,6 +50,8 @@ class MainRepositoryImpl(
             }
         }
 
+
+
     override suspend fun fetchRecentNews(mustBeFromInternet: Boolean) {
         val currentTimestamp = Clock.System.now().toTimestamp()
 
@@ -51,7 +64,7 @@ class MainRepositoryImpl(
             val responseNews = remoteDataSource.fetchRecentNewsData()
                 .news
                 // it has to be published
-                .filter { it.date != null && it.id != it.title && it.id != it.desc}
+                .filter { it.date != null && it.id != it.title && it.id != it.desc }
             refreshNews(responseNews, cachedNews)
         } else {
             cachedNews.filter { it.isImageLoading || it.imageByteArray == null }
@@ -61,9 +74,11 @@ class MainRepositoryImpl(
         }
     }
 
-    override fun getNewsFlow(): Flow<List<NewsItem>> = localDataSource.getNewsEntities().mapToNewsItems()
+    override fun getNewsFlow(): Flow<List<NewsItem>> =
+        localDataSource.getNewsEntities().mapToNewsItems()
 
-    private suspend fun getCachedNews(): List<NewsEntity> = (localDataSource.getNewsEntities().firstOrNull() ?: emptyList())
+    private suspend fun getCachedNews(): List<NewsEntity> =
+        (localDataSource.getNewsEntities().firstOrNull() ?: emptyList())
 
     private suspend fun refreshNews(
         responseNews: List<RNewsItem>,

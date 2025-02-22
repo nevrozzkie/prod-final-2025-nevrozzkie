@@ -1,8 +1,10 @@
 package socialFeed
 
+import AnimatedSmoothTransition
 import DropdownMenuOnLongPressContainer
 import PostNewsData
 import ExpandableTextWithCustomOverflow
+import ManagePostDTO
 import RightImportantLayout
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
@@ -23,10 +26,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import base.TonalCard
 import bottomInfoTextStyle
 import common.PinnedNewsContent
+import toByteArray
 import view.theme.Paddings
 
 @Composable
@@ -53,10 +59,10 @@ fun SocialFeedItemContent(
         dropdownContent = { isDropdownExpanded ->
             DropdownMenuItem(
                 text = {
-                    Text("Сохранить")
+                    Text( if (isFavourite) "Отменить" else "Сохранить")
                 },
                 leadingIcon = {
-                    Icon(Icons.Rounded.Favorite, null)
+                    Icon(if (isFavourite) Icons.Rounded.FavoriteBorder else Icons.Rounded.Favorite, null)
                 },
                 onClick = {
                     component.onEvent(SocialFeedStore.Intent.ClickOnFavouriteButton(id))
@@ -71,6 +77,19 @@ fun SocialFeedItemContent(
                     Icon(Icons.Rounded.Edit, null)
                 },
                 onClick = {
+                    component.onOutput(
+                        SocialFeedComponent.Output.NavigateToManagePost(
+                            post = ManagePostDTO(
+                                id = id,
+                                images = images.map { it.asAndroidBitmap().toByteArray() },
+                                tags = tags,
+                                text = text,
+                                creationDate = date,
+                                creationTime = time,
+                                newsData = newsData
+                            )
+                        )
+                    )
                     isDropdownExpanded.value = false
                 }
             )
@@ -81,13 +100,16 @@ fun SocialFeedItemContent(
             Modifier.fillMaxWidth()
         ) {
             Column(Modifier.padding(Paddings.medium)) {
-                // images
+                ImagesGrid(
+                    images,
+                    modifier = Modifier.fillMaxWidth().height(200.dp)
+                )
                 ExpandableTextWithCustomOverflow(
                     isExpanded = isTextExpanded,
                     text = text,
-                    textStyle = MaterialTheme.typography.bodyLarge
+                    textStyle = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(start = Paddings.medium, top = Paddings.semiMedium)
                 )
-                Spacer(Modifier.padding(Paddings.verySmall))
                 ExpandableTagsPreview(
                     tags = tags,
                     allTags = allTags
@@ -110,8 +132,9 @@ fun SocialFeedItemContent(
                 ) {
                     RightImportantLayout(
                         leftSide = {
-                            if (isFavourite) {
-                                Icon(Icons.Rounded.Favorite, null)
+                            AnimatedSmoothTransition (isFavourite, isGoDown = true) {
+                                Icon(Icons.Rounded.Favorite, null,
+                                    modifier = Modifier.padding(start = Paddings.medium))
                             }
                             if (isEdited) {
                                 Text(

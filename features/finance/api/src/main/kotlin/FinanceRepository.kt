@@ -6,6 +6,7 @@ interface FinanceRepository {
     suspend fun upsertGoal(goal: Goal)
     suspend fun deleteGoal(goal: Goal)
 
+    suspend fun completeGoal(goal: Goal, transactionMaxId: Long)
 
     fun getTransactionsFlow(): Flow<List<Transaction>>
 

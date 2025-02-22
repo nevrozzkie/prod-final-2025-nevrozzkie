@@ -5,6 +5,7 @@ import BarShadow
 import FinanceScreen
 import MainScreen
 import NewsWebView
+import SearchScreen
 import SocialFlowScreen
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
@@ -44,7 +45,8 @@ fun RootFlowScreen(
     Scaffold(
         bottomBar = {
             val isShowing =
-                !RootComponent.Child.NewYorkTimesChild::class.isInstance(stack.active.instance)
+                !RootComponent.Child.NewYorkTimesChild::class.isInstance(stack.active.instance) &&
+                        !RootComponent.Child.SearchChild::class.isInstance(stack.active.instance)
 
             Box(Modifier.animateContentSize()) {
 
@@ -104,6 +106,10 @@ fun RootFlowScreen(
                         )
 
                         is RootComponent.Child.NewYorkTimesChild -> NewsWebView(
+                            child.component
+                        )
+
+                        is RootComponent.Child.SearchChild -> SearchScreen(
                             child.component
                         )
                     }

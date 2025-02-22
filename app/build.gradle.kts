@@ -43,6 +43,8 @@ android {
 dependencies {
     implementation(project(":features:main:compose"))
     implementation(project(":features:main:data"))
+    implementation(project(":features:search:compose"))
+    implementation(project(":features:search:data"))
     implementation(project(":features:finance:compose"))
     implementation(project(":features:finance:data"))
     implementation(project(":features:social:compose"))
